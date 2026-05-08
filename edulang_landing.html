@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduLang — AI Language Assistant for Schools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --teal-dark: #0f766e;
+  --teal-glow: rgba(13,148,136,0.15);
+  --bg: #020c0b;
+  --bg2: #051210;
+  --surface: #0d1f1e;
+  --surface2: #122322;
+  --text: #f0fdf9;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --border: rgba(13,148,136,0.2);
+  --white: #ffffff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAV */
+nav {
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:100;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 60px;
+  background: rgba(2,12,11,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:22px;
+  color:var(--text);
+  text-decoration:none;
+}
+
+.logo-icon {
+  width:32px; height:32px;
+  background: var(--teal);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+.nav-links {
+  display:flex;
+  gap:32px;
+  list-style:none;
+}
+
+.nav-links a {
+  color:var(--text2);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover { color:var(--text); }
+
+.lang-switcher {
+  display:flex;
+  gap:4px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:4px;
+}
+.lang-btn {
+  padding:4px 12px;
+  border:none;
+  background:none;
+  color:var(--text2);
+  font-size:12px;
+  font-weight:600;
+  border-radius:6px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.lang-btn.active {
+  background:var(--teal);
+  color:white;
+}
+
+.nav-cta {
+  background:var(--teal);
+  color:white;
+  padding:10px 24px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  transition:all 0.2s;
+}
+.nav-cta:hover { background:var(--teal-light); transform:translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:120px 60px 80px;
+  position:relative;
+  text-align:center;
+}
+
+/* Glow blob */
+.hero::after {
+  content:'';
+  position:absolute;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+  width:600px; height:600px;
+  background: radial-gradient(ellipse, rgba(13,148,136,0.12) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.hero-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:6px 16px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--teal-light);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-bottom:32px;
+  position:relative;
+  z-index:1;
+}
+
+.hero-badge::before {
+  content:'';
+  width:6px; height:6px;
+  background:var(--teal-light);
+  border-radius:50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(1.4); }
+}
+
+.hero h1 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(48px, 7vw, 84px);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-0.03em;
+  margin-bottom:24px;
+  position:relative;
+  z-index:1;
+}
+
+.hero h1 span {
+  color:var(--teal-light);
+  position:relative;
+}
+
+.hero p {
+  font-size:clamp(16px, 2vw, 20px);
+  color:var(--text2);
+  max-width:600px;
+  line-height:1.7;
+  margin-bottom:48px;
+  font-weight:300;
+  position:relative;
+  z-index:1;
+}
+
+.hero-actions {
+  display:flex;
+  gap:16px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+}
+
+.btn-primary {
+  background:var(--teal);
+  color:white;
+  padding:16px 36px;
+  border-radius:10px;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:600;
+  transition:all 0.2s;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  box-shadow: 0 0 40px rgba(13,148,136,0.3);
+}
+.btn-primary:hover {
+  background:var(--teal-light);
+  transform:translateY(-2px);
+  box-shadow: 0 0 60px rgba(13,148,136,0.4);
+}
+
+.btn-secondary {
+  color:var(--text2);
+  padding:16px 36px;
+  border-radius:10px;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:500;
+  border:1px solid var(--border);
+  transition:all 0.2s;
+  background:var(--surface);
+}
+.btn-secondary:hover {
+  color:var(--text);
+  border-color:var(--teal);
+  background:var(--surface2);
+}
+
+.hero-note {
+  margin-top:20px;
+  font-size:13px;
+  color:var(--text3);
+  position:relative;
+  z-index:1;
+}
+
+/* LOGOS / SOCIAL PROOF */
+.social-proof {
+  padding:40px 60px;
+  text-align:center;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.social-proof p {
+  font-size:12px;
+  color:var(--text3);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:24px;
+}
+.social-logos {
+  display:flex;
+  gap:48px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.social-logos span {
+  font-family:'Syne',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--text3);
+  opacity:0.5;
+}
+
+/* WHO IS IT FOR */
+.audience {
+  padding:100px 60px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.section-label {
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--teal-light);
+  margin-bottom:16px;
+}
+
+.section-title {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,4vw,48px);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  margin-bottom:16px;
+}
+
+.section-sub {
+  font-size:18px;
+  color:var(--text2);
+  font-weight:300;
+  margin-bottom:60px;
+  max-width:560px;
+}
+
+.cards-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:40px;
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(90deg, var(--teal), transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.card:hover {
+  border-color:var(--teal);
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.card:hover::before { opacity:1; }
+
+.card-icon {
+  font-size:32px;
+  margin-bottom:20px;
+}
+
+.card h3 {
+  font-family:'Syne',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.card p {
+  color:var(--text2);
+  font-size:15px;
+  line-height:1.7;
+  font-weight:300;
+}
+
+.card-tag {
+  display:inline-block;
+  margin-top:20px;
+  padding:4px 12px;
+  background:var(--teal-glow);
+  border:1px solid var(--border);
+  border-radius:100px;
+  font-size:11px;
+  font-weight:700;
+  color:var(--teal-light);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+
+/* FEATURES */
+.features {
+  padding:100px 60px;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+
+.features-inner {
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.features-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:32px;
+  margin-top:60px;
+}
+
+.feature {
+  padding:32px;
+  border-radius:12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+}
+
+.feature-num {
+  font-family:'Syne',sans-serif;
+  font-size:48px;
+  font-weight:800;
+  color:var(--teal);
+  opacity:0.3;
+  line-height:1;
+  margin-bottom:16px;
+}
+
+.feature h4 {
+  font-family:'Syne',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.feature p {
+  color:var(--text2);
+  font-size:14px;
+  line-height:1.7;
+  font-weight:300;
+}
+
+/* PRICING */
+.pricing {
+  padding:100px 60px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.pricing-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:60px;
+}
+
+.price-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:40px;
+  transition:all 0.3s;
+}
+
+.price-card.featured {
+  border-color:var(--teal);
+  background:var(--surface2);
+  box-shadow:0 0 60px rgba(13,148,136,0.15);
+  position:relative;
+}
+
+.featured-badge {
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--teal);
+  color:white;
+  padding:4px 16px;
+  border-radius:100px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.price-name {
+  font-family:'Syne',sans-serif;
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.price-desc {
+  color:var(--text3);
+  font-size:13px;
+  margin-bottom:32px;
+}
+
+.price-amount {
+  font-family:'Syne',sans-serif;
+  font-size:48px;
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+.price-amount span {
+  font-size:16px;
+  font-weight:400;
+  color:var(--text2);
+}
+
+.price-students {
+  font-size:13px;
+  color:var(--teal-light);
+  margin-bottom:32px;
+  font-weight:500;
+}
+
+.price-features {
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:32px;
+}
+
+.price-features li {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color:var(--text2);
+}
+
+.price-features li::before {
+  content:'✓';
+  color:var(--teal-light);
+  font-weight:700;
+  flex-shrink:0;
+}
+
+.price-btn {
+  display:block;
+  text-align:center;
+  padding:14px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
+  text-decoration:none;
+  transition:all 0.2s;
+  background:var(--surface2);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.price-card.featured .price-btn {
+  background:var(--teal);
+  border-color:var(--teal);
+  color:white;
+}
+
+.price-btn:hover { opacity:0.85; }
+
+/* TRIAL */
+.trial-section {
+  padding:100px 60px;
+  text-align:center;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+
+.trial-section::before {
+  content:'';
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:800px; height:400px;
+  background:radial-gradient(ellipse, rgba(13,148,136,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.trial-section h2 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  font-weight:800;
+  letter-spacing:-0.02em;
+  margin-bottom:20px;
+  position:relative;
+  z-index:1;
+}
+
+.trial-section p {
+  color:var(--text2);
+  font-size:18px;
+  font-weight:300;
+  margin-bottom:40px;
+  max-width:500px;
+  margin-left:auto;
+  margin-right:auto;
+  position:relative;
+  z-index:1;
+}
+
+/* FOOTER */
+footer {
+  padding:40px 60px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+footer p {
+  color:var(--text3);
+  font-size:13px;
+}
+
+.footer-links {
+  display:flex;
+  gap:24px;
+}
+.footer-links a {
+  color:var(--text3);
+  font-size:13px;
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.footer-links a:hover { color:var(--text2); }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.hero h1 { animation: fadeUp 0.8s ease forwards; }
+.hero p { animation: fadeUp 0.8s 0.15s ease forwards; opacity:0; }
+.hero-actions { animation: fadeUp 0.8s 0.3s ease forwards; opacity:0; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding:16px 24px; }
+  .nav-links { display:none; }
+  .hero { padding:100px 24px 60px; }
+  .social-proof, .audience, .features, .pricing { padding:60px 24px; }
+  .cards-grid, .features-grid, .pricing-grid { grid-template-columns:1fr; }
+  footer { flex-direction:column; gap:16px; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <img src="edulang_icon_transparent.png" alt="EduLang" style="height:34px;">EduLang
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features" data-en="Features" data-el="Λειτουργίες">Features</a></li>
+    <li><a href="#pricing" data-en="Pricing" data-el="Τιμές">Pricing</a></li>
+    <li><a href="#audience" data-en="Who is it for?" data-el="Για ποιον;">Who is it for?</a></li>
+  </ul>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('el')">ΕΛ</button>
+    </div>
+    <a href="#trial" class="nav-cta" data-en="Start Free Trial" data-el="Δωρεάν Δοκιμή">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge" data-en="AI-Powered · Language Learning" data-el="Τεχνητή Νοημοσύνη · Εκμάθηση Γλωσσών">
+    AI-Powered · Language Learning
+  </div>
+  <h1 data-en="Your students deserve<br><span>a smarter assistant</span>" data-el="Οι μαθητές σου αξίζουν<br><span>έναν πιο έξυπνο βοηθό</span>">
+    Your students deserve<br><span>a smarter assistant</span>
+  </h1>
+  <p data-en="An AI language tutor trained on your own teaching material. Tracks every student's progress. Generates reports for parents. Works 24/7."
+     data-el="AI γλωσσικός βοηθός εκπαιδευμένος στο δικό σου υλικό. Παρακολουθεί την πρόοδο κάθε μαθητή. Δημιουργεί αναφορές για γονείς. Λειτουργεί 24/7.">
+    An AI language tutor trained on your own teaching material. Tracks every student's progress. Generates reports for parents. Works 24/7.
+  </p>
+  <div class="hero-actions">
+    <a href="#trial" class="btn-primary" data-en="→ Start Free — 14 days" data-el="→ Ξεκίνα Δωρεάν — 14 μέρες">→ Start Free — 14 days</a>
+    <a href="#features" class="btn-secondary" data-en="See how it works" data-el="Δες πώς λειτουργεί">See how it works</a>
+  </div>
+  <p class="hero-note" data-en="No credit card required · Cancel anytime" data-el="Χωρίς κάρτα · Ακύρωση οποιαδήποτε στιγμή">No credit card required · Cancel anytime</p>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="social-proof">
+  <p data-en="Trusted by language schools and private teachers" data-el="Εμπιστεύονται φροντιστήρια και ιδιώτες καθηγητές">Trusted by language schools and private teachers</p>
+  <div class="social-logos">
+    <img src="edulang_icon_transparent.png" alt="EduLang" style="height:48px;opacity:0.6;">
+  </div>
+</div>
+
+<!-- WHO IS IT FOR -->
+<section class="audience" id="audience">
+  <div class="section-label" data-en="Who is it for?" data-el="Για ποιον;">Who is it for?</div>
+  <h2 class="section-title" data-en="One tool,<br>two paths" data-el="Ένα εργαλείο,<br>δύο δρόμοι">One tool,<br>two paths</h2>
+  <p class="section-sub" data-en="Whether you run a school or teach privately — EduLang adapts to you." data-el="Είτε τρέχεις φροντιστήριο είτε κάνεις ιδιαίτερα — το EduLang προσαρμόζεται σε σένα.">Whether you run a school or teach privately — EduLang adapts to you.</p>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">🏫</div>
+      <h3 data-en="Language Schools" data-el="Φροντιστήρια">Language Schools</h3>
+      <p data-en="One account for all your teachers. Each teacher has their own students and material. The school director sees everything from a single dashboard." data-el="Ένα account για όλους τους καθηγητές. Κάθε καθηγητής έχει τους δικούς του μαθητές και υλικό. Ο διευθυντής βλέπει τα πάντα από ένα dashboard.">One account for all your teachers. Each teacher has their own students and material. The school director sees everything from a single dashboard.</p>
+      <span class="card-tag" data-en="EduLang for Schools" data-el="EduLang για Φροντιστήρια">EduLang for Schools</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">👤</div>
+      <h3 data-en="Private Teachers" data-el="Ιδιώτες Καθηγητές">Private Teachers</h3>
+      <p data-en="Teach privately at home or online? Upload your material, register your students and let the AI assistant do the work between sessions." data-el="Κάνεις ιδιαίτερα; Ανέβασε το υλικό σου, γράψε τους μαθητές σου και άφησε τον AI βοηθό να δουλεύει ανάμεσα στα μαθήματα.">Teach privately at home or online? Upload your material, register your students and let the AI assistant do the work between sessions.</p>
+      <span class="card-tag" data-en="LangBot for Teachers" data-el="LangBot για Καθηγητές">LangBot for Teachers</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-label" data-en="Features" data-el="Λειτουργίες">Features</div>
+    <h2 class="section-title" data-en="Everything your students need.<br>Everything you've been missing." data-el="Ό,τι χρειάζονται οι μαθητές σου.<br>Ό,τι σου έλειπε.">Everything your students need.<br>Everything you've been missing.</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-num">01</div>
+        <h4 data-en="Your material, not the internet" data-el="Το υλικό σου, όχι το διαδίκτυο">Your material, not the internet</h4>
+        <p data-en="Upload your PDFs and notes. The assistant answers exclusively from your teaching material — not Wikipedia, not Google." data-el="Ανέβασε τα PDFs και τις σημειώσεις σου. Ο βοηθός απαντάει αποκλειστικά από το υλικό σου — όχι Wikipedia, όχι Google.">Upload your PDFs and notes. The assistant answers exclusively from your teaching material — not Wikipedia, not Google.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-num">02</div>
+        <h4 data-en="Memory that grows" data-el="Μνήμη που μεγαλώνει">Memory that grows</h4>
+        <p data-en="The assistant remembers each student individually — their weaknesses, strengths, and learning style. Gets smarter with every session." data-el="Ο βοηθός θυμάται κάθε μαθητή ξεχωριστά — τις αδυναμίες, τα δυνατά σημεία, τον τρόπο μάθησης. Γίνεται πιο έξυπνος με κάθε συνεδρία.">The assistant remembers each student individually — their weaknesses, strengths, and learning style. Gets smarter with every session.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-num">03</div>
+        <h4 data-en="Progress reports for parents" data-el="Αναφορές προόδου για γονείς">Progress reports for parents</h4>
+        <p data-en="One click generates a professional PDF with grade charts, exam history and teacher notes. Parents love it." data-el="Ένα κλικ παράγει επαγγελματικό PDF με γραφήματα βαθμολογίας, ιστορικό εξετάσεων και σχόλια καθηγητή. Οι γονείς το λατρεύουν.">One click generates a professional PDF with grade charts, exam history and teacher notes. Parents love it.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-num">04</div>
+        <h4 data-en="Built-in exam system" data-el="Ενσωματωμένο σύστημα εξετάσεων">Built-in exam system</h4>
+        <p data-en="6 question types with AI explanation per question. Students practice, get graded, improve. All tracked automatically." data-el="6 τύποι ερωτήσεων με AI εξήγηση ανά ερώτηση. Οι μαθητές εξασκούνται, βαθμολογούνται, βελτιώνονται. Όλα καταγράφονται αυτόματα.">6 question types with AI explanation per question. Students practice, get graded, improve. All tracked automatically.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-num">05</div>
+        <h4 data-en="All languages" data-el="Όλες οι γλώσσες">All languages</h4>
+        <p data-en="English, German, French, Italian, Spanish — and any other language. A1 to C2. The assistant adapts to each level automatically." data-el="Αγγλικά, Γερμανικά, Γαλλικά, Ιταλικά, Ισπανικά — και οποιαδήποτε άλλη. A1 έως C2. Ο βοηθός προσαρμόζεται σε κάθε επίπεδο αυτόματα.">English, German, French, Italian, Spanish — and any other language. A1 to C2. The assistant adapts to each level automatically.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-num">06</div>
+        <h4 data-en="Works 24/7" data-el="Λειτουργεί 24/7">Works 24/7</h4>
+        <p data-en="Students can practice at midnight before an exam. The assistant is always available — you don't have to be." data-el="Οι μαθητές μπορούν να εξασκούνται τα μεσάνυχτα πριν από εξέταση. Ο βοηθός είναι πάντα διαθέσιμος — εσύ δεν χρειάζεται.">Students can practice at midnight before an exam. The assistant is always available — you don't have to be.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label" data-en="Pricing" data-el="Τιμές">Pricing</div>
+  <h2 class="section-title" data-en="Simple, honest pricing" data-el="Απλές, ειλικρινείς τιμές">Simple, honest pricing</h2>
+  <p class="section-sub" data-en="Pay per student count. No hidden fees. Cancel anytime." data-el="Πληρώνεις βάσει αριθμού μαθητών. Χωρίς κρυφές χρεώσεις. Ακύρωση οποιαδήποτε στιγμή.">Pay per student count. No hidden fees. Cancel anytime.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Solo</div>
+      <div class="price-desc" data-en="For private teachers" data-el="Για ιδιώτες καθηγητές">For private teachers</div>
+      <div class="price-amount">€49<span data-en="/month" data-el="/μήνα">/month</span></div>
+      <div class="price-students" data-en="Up to 15 students" data-el="Έως 15 μαθητές">Up to 15 students</div>
+      <ul class="price-features">
+        <li data-en="1 teacher account" data-el="1 λογαριασμός καθηγητή">1 teacher account</li>
+        <li data-en="Unlimited uploads" data-el="Απεριόριστα uploads">Unlimited uploads</li>
+        <li data-en="PDF progress reports" data-el="PDF αναφορές προόδου">PDF progress reports</li>
+        <li data-en="Exam system" data-el="Σύστημα εξετάσεων">Exam system</li>
+      </ul>
+      <a href="#trial" class="price-btn" data-en="Start Free Trial" data-el="Δωρεάν Δοκιμή">Start Free Trial</a>
+    </div>
+    <div class="price-card featured">
+      <div class="featured-badge" data-en="Most Popular" data-el="Πιο Δημοφιλές">Most Popular</div>
+      <div class="price-name">Studio</div>
+      <div class="price-desc" data-en="For growing schools" data-el="Για αναπτυσσόμενα φροντιστήρια">For growing schools</div>
+      <div class="price-amount">€99<span data-en="/month" data-el="/μήνα">/month</span></div>
+      <div class="price-students" data-en="Up to 35 students" data-el="Έως 35 μαθητές">Up to 35 students</div>
+      <ul class="price-features">
+        <li data-en="Multiple teacher accounts" data-el="Πολλοί λογαριασμοί καθηγητών">Multiple teacher accounts</li>
+        <li data-en="School director dashboard" data-el="Dashboard διευθυντή">School director dashboard</li>
+        <li data-en="Everything in Solo" data-el="Όλα του Solo">Everything in Solo</li>
+        <li data-en="Priority support" data-el="Προτεραιότητα υποστήριξης">Priority support</li>
+      </ul>
+      <a href="#trial" class="price-btn" data-en="Start Free Trial" data-el="Δωρεάν Δοκιμή">Start Free Trial</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Academy</div>
+      <div class="price-desc" data-en="For large schools" data-el="Για μεγάλα φροντιστήρια">For large schools</div>
+      <div class="price-amount">€179<span data-en="/month" data-el="/μήνα">/month</span></div>
+      <div class="price-students" data-en="Up to 80 students" data-el="Έως 80 μαθητές">Up to 80 students</div>
+      <ul class="price-features">
+        <li data-en="Unlimited teachers" data-el="Απεριόριστοι καθηγητές">Unlimited teachers</li>
+        <li data-en="Advanced analytics" data-el="Αναλυτικά στατιστικά">Advanced analytics</li>
+        <li data-en="Everything in Studio" data-el="Όλα του Studio">Everything in Studio</li>
+        <li data-en="Dedicated onboarding" data-el="Προσωπικό onboarding">Dedicated onboarding</li>
+      </ul>
+      <a href="#trial" class="price-btn" data-en="Start Free Trial" data-el="Δωρεάν Δοκιμή">Start Free Trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRIAL CTA -->
+<section class="trial-section" id="trial">
+  <h2 data-en="14 days free.<br>No credit card." data-el="14 μέρες δωρεάν.<br>Χωρίς κάρτα.">14 days free.<br>No credit card.</h2>
+  <p data-en="Full access. Up to 3 teachers and 10 students per teacher. See for yourself." data-el="Πλήρης πρόσβαση. Έως 3 καθηγητές και 10 μαθητές ανά καθηγητή. Δοκίμασέ το μόνος σου.">Full access. Up to 3 teachers and 10 students per teacher. See for yourself.</p>
+  <a href="#" class="btn-primary" style="font-size:18px;padding:18px 48px;" data-en="→ Start Free Trial" data-el="→ Ξεκίνα Δωρεάν Δοκιμή">→ Start Free Trial</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo" style="font-size:18px;">
+    <img src="edulang_icon_transparent.png" alt="EduLang" style="height:28px;">EduLang
+  </a>
+  <div class="footer-links">
+    <a href="#" data-en="Privacy Policy" data-el="Πολιτική Απορρήτου">Privacy Policy</a>
+    <a href="#" data-en="Terms of Service" data-el="Όροι Χρήσης">Terms of Service</a>
+    <a href="#" data-en="Contact" data-el="Επικοινωνία">Contact</a>
+  </div>
+  <p>© 2026 EduLang</p>
+</footer>
+
+<script>
+// Language switcher
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+  document.documentElement.lang = lang === 'el' ? 'el' : 'en';
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+</script>
+</body>
+</html>

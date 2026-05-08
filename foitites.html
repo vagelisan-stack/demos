@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Φοιτητές — Τμήμα Θεολογίας ΑΠΘ</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2c4e;
+    --gold: #9a7b2e;
+    --gold-light: #c9a84c;
+    --cream: #f8f5ef;
+    --warm-white: #fdfcf9;
+    --text: #2d2d2d;
+    --text-light: #5c5c5c;
+    --border: #ddd5c4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--warm-white); color: var(--text); font-size: 16px; line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .header-top { background: #111e35; padding: 6px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: rgba(255,255,255,0.55); }
+  .header-top a { color: rgba(255,255,255,0.55); text-decoration: none; }
+  .header-top a:hover { color: var(--gold-light); }
+  .header-main { padding: 14px 40px; display: flex; align-items: center; gap: 20px; }
+  .logo-area { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .logo-emblem { width: 52px; height: 52px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'EB Garamond', serif; font-size: 22px; color: white; font-weight: 600; flex-shrink: 0; }
+  .logo-text .institution { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
+  .logo-text .dept { font-family: 'EB Garamond', serif; font-size: 18px; font-weight: 500; color: white; line-height: 1.2; }
+  nav { margin-left: auto; display: flex; }
+  nav a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13.5px; padding: 8px 16px; transition: color 0.2s; position: relative; }
+  nav a:hover { color: var(--gold-light); }
+  nav a.active { color: var(--gold-light); }
+  nav a::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 16px; height: 2px; background: var(--gold-light); transform: scaleX(0); transition: transform 0.2s; }
+  nav a:hover::after, nav a.active::after { transform: scaleX(1); }
+
+  /* PAGE HERO - μικρό, όχι full height */
+  .page-hero {
+    background: var(--navy);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: 'ΦΟΙΤΗΤΕΣ';
+    position: absolute;
+    right: -20px; top: -20px;
+    font-family: 'EB Garamond', serif;
+    font-size: 140px;
+    color: rgba(255,255,255,0.03);
+    font-weight: 600;
+    letter-spacing: -4px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .breadcrumb { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+  .breadcrumb a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--gold-light); }
+  .breadcrumb span { margin: 0 6px; }
+  .page-hero h1 { font-family: 'EB Garamond', serif; font-size: 42px; color: white; font-weight: 500; margin-bottom: 10px; }
+  .page-hero p { color: rgba(255,255,255,0.6); font-size: 16px; max-width: 560px; }
+
+  /* QUICK ACCESS BAR */
+  .quick-bar {
+    background: var(--gold);
+    padding: 0;
+  }
+  .quick-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+  }
+  .quick-bar a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    transition: background 0.2s;
+  }
+  .quick-bar a:hover { background: rgba(0,0,0,0.12); }
+  .quick-bar a .icon { font-size: 15px; }
+
+  /* MAIN LAYOUT */
+  .main-wrap { max-width: 1200px; margin: 0 auto; padding: 50px 40px; display: grid; grid-template-columns: 1fr 300px; gap: 56px; }
+
+  /* SECTION HEADERS */
+  .sec-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .sec-title { font-family: 'EB Garamond', serif; font-size: 26px; color: var(--navy); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--border); position: relative; }
+  .sec-title::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 50px; height: 2px; background: var(--gold); }
+
+  /* CARDS GRID */
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 44px; }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 22px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .card:hover { box-shadow: 0 6px 20px rgba(26,44,78,0.1); transform: translateY(-2px); }
+
+  .card-icon { font-size: 26px; margin-bottom: 10px; }
+  .card-title { font-family: 'EB Garamond', serif; font-size: 18px; color: var(--navy); margin-bottom: 6px; font-weight: 500; }
+  .card-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; }
+  .card-link { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .card.highlight {
+    background: var(--navy);
+    border-color: var(--navy);
+  }
+  .card.highlight .card-title { color: white; }
+  .card.highlight .card-desc { color: rgba(255,255,255,0.6); }
+  .card.highlight .card-link { color: var(--gold-light); }
+
+  /* DOCS LIST */
+  .docs-section { margin-bottom: 44px; }
+  .doc-list { display: flex; flex-direction: column; gap: 0; }
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .doc-item:hover { background: var(--cream); margin: 0 -10px; padding: 13px 10px; border-radius: 4px; }
+  .doc-icon {
+    width: 36px; height: 36px;
+    background: #fee2e2;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .doc-icon.blue { background: #dbeafe; }
+  .doc-icon.green { background: #dcfce7; }
+  .doc-icon.purple { background: #ede9fe; }
+  .doc-info .doc-title { font-size: 14px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .doc-info .doc-meta { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .doc-arrow { margin-left: auto; color: var(--border); font-size: 18px; }
+
+  /* DEADLINES */
+  .deadlines { background: var(--cream); border: 1px solid var(--border); padding: 0; margin-bottom: 44px; overflow: hidden; }
+  .deadlines-header { background: var(--navy); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+  .deadlines-header span { color: white; font-size: 14px; font-weight: 600; }
+  .deadline-list { display: flex; flex-direction: column; }
+  .deadline-item { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+  .deadline-item:last-child { border-bottom: none; }
+  .deadline-date { background: var(--navy); color: white; padding: 6px 10px; border-radius: 4px; text-align: center; min-width: 50px; flex-shrink: 0; }
+  .deadline-date .dd { font-family: 'EB Garamond', serif; font-size: 20px; line-height: 1; display: block; }
+  .deadline-date .mm { font-size: 10px; opacity: 0.7; text-transform: uppercase; }
+  .deadline-title { font-size: 13.5px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .deadline-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .deadline-badge { margin-left: auto; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+  .badge-red { background: #fee2e2; color: #dc2626; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 28px; }
+
+  .s-card { background: var(--cream); border: 1px solid var(--border); padding: 22px; }
+  .s-card .sec-title { font-size: 18px; margin-bottom: 14px; }
+
+  .contact-list { display: flex; flex-direction: column; gap: 10px; }
+  .contact-row { display: flex; flex-direction: column; gap: 2px; }
+  .contact-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); font-weight: 600; }
+  .contact-val { font-size: 13.5px; color: var(--navy); font-weight: 600; }
+  .contact-val a { color: var(--navy); text-decoration: none; }
+  .contact-val a:hover { color: var(--gold); }
+
+  .hours-list { display: flex; flex-direction: column; gap: 6px; }
+  .hours-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-day { color: var(--text-light); }
+  .hours-time { color: var(--navy); font-weight: 600; }
+  .hours-time.closed { color: #dc2626; }
+
+  /* AI ASSISTANT */
+  .ai-s-card {
+    background: var(--navy);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-s-card::after {
+    content: '🎓';
+    position: absolute;
+    right: 10px; bottom: 10px;
+    font-size: 60px;
+    opacity: 0.08;
+  }
+  .ai-s-card .sec-label { color: var(--gold-light); }
+  .ai-s-card .sec-title { color: white; border-color: rgba(255,255,255,0.1); }
+  .ai-s-card .sec-title::after { background: var(--gold-light); }
+  .ai-s-card p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 16px; }
+  .btn-full { display: block; background: var(--gold); color: white; text-align: center; padding: 11px; font-size: 13px; font-weight: 600; text-decoration: none; letter-spacing: 0.04em; transition: background 0.2s; }
+  .btn-full:hover { background: var(--gold-light); }
+
+  /* USEFUL LINKS */
+  .u-links { list-style: none; }
+  .u-links li { border-bottom: 1px solid var(--border); }
+  .u-links li:last-child { border-bottom: none; }
+  .u-links a { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 13.5px; color: var(--navy); text-decoration: none; transition: color 0.15s; }
+  .u-links a:hover { color: var(--gold); }
+  .u-links a::after { content: '›'; font-size: 18px; color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <span>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης · Θεολογική Σχολή</span>
+    <div style="display:flex;gap:20px;">
+      <a href="#">Χάρτης Site</a>
+      <a href="#">Επικοινωνία</a>
+      <a href="#" style="color:rgba(255,255,255,0.8)">ΕΛ</a>
+      <a href="#">EN</a>
+    </div>
+  </div>
+  <div class="header-main">
+    <a href="theo_auth_redesign.html" class="logo-area">
+      <div class="logo-emblem">ΑΠΘ</div>
+      <div class="logo-text">
+        <div class="institution">Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης</div>
+        <div class="dept">Τμήμα Θεολογίας</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#">Τμήμα</a>
+      <a href="foitites.html" class="active">Φοιτητές</a>
+      <a href="spoydes.html">Σπουδές</a>
+      <a href="#">Προσωπικό</a>
+      <a href="erevna.html">Έρευνα</a>
+      <a href="anakoinoseis.html">Ανακοινώσεις</a>
+      <a href="epikoinonia.html" style="border-left:1px solid rgba(255,255,255,0.15);margin-left:8px;padding-left:8px;">Επικοινωνία</a>
+    </nav>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="theo_auth_redesign.html">Αρχική</a>
+      <span>›</span>
+      <span style="color:rgba(255,255,255,0.7)">Φοιτητές</span>
+    </div>
+    <h1>Φοιτητές</h1>
+    <p>Όλα όσα χρειάζεσαι σε ένα μέρος — έγγραφα, προθεσμίες, γραμματεία και ψηφιακοί βοηθοί σπουδών.</p>
+  </div>
+</div>
+
+<!-- QUICK ACCESS BAR -->
+<div class="quick-bar">
+  <div class="quick-bar-inner">
+    <a href="#eggrafa"><span class="icon">📄</span> Έγγραφα</a>
+    <a href="#programmata"><span class="icon">📅</span> Πρόγραμμα</a>
+    <a href="#prothesmies"><span class="icon">⏰</span> Προθεσμίες</a>
+    <a href="#voithoi"><span class="icon">🎓</span> AI Βοηθοί</a>
+    <a href="#grammateia"><span class="icon">📞</span> Γραμματεία</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+<main>
+
+  <!-- SECTION: ΤΙ ΨΑΧΝΕΙΣ -->
+  <div id="programmata">
+    <div class="sec-label">Γρήγορη Πρόσβαση</div>
+    <h2 class="sec-title">Τι ψάχνεις;</h2>
+    <div class="cards-grid">
+      <a href="https://theo.auth.gr/programmata-proptyxiakon-spoudon/" class="card" target="_blank">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Πρόγραμμα Σπουδών (ΠΠΣ)</div>
+        <div class="card-desc">Όλα τα μαθήματα, εξάμηνα, ώρες και ECTS του προπτυχιακού προγράμματος.</div>
+        <div class="card-link">Δες το πρόγραμμα →</div>
+      </a>
+      <a href="https://theo.auth.gr/programmata_metaptyxiakon/" class="card" target="_blank">
+        <div class="card-icon">🎓</div>
+        <div class="card-title">Μεταπτυχιακά (ΠΜΣ)</div>
+        <div class="card-desc">Τρία μεταπτυχιακά προγράμματα: Θεολογία & Πολιτισμός, Ορθόδοξη Θεολογία, Ισλαμικές Σπουδές.</div>
+        <div class="card-link">Μάθε περισσότερα →</div>
+      </a>
+      <a href="https://theo.auth.gr/phd/" class="card" target="_blank">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Διδακτορικές Σπουδές</div>
+        <div class="card-desc">Κανονισμός, προκηρύξεις και χρήσιμα έγγραφα για υποψήφιους διδάκτορες.</div>
+        <div class="card-link">Πληροφορίες →</div>
+      </a>
+      <a href="https://edu-assistants.theo.auth.gr" class="card highlight" target="_blank">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Ψηφιακοί Βοηθοί Σπουδών</div>
+        <div class="card-desc">AI βοηθοί που απαντούν με βάση το υλικό των καθηγητών σου — 24/7, άμεσα.</div>
+        <div class="card-link">Ξεκίνα τώρα →</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SECTION: ΠΡΟΘΕΣΜΙΕΣ -->
+  <div class="docs-section" id="prothesmies">
+    <div class="sec-label">Ακαδημαϊκό Ημερολόγιο</div>
+    <h2 class="sec-title">Σημαντικές Προθεσμίες</h2>
+    <div class="deadlines">
+      <div class="deadlines-header">
+        <span>📅</span>
+        <span>Εαρινό Εξάμηνο 2025–2026</span>
+      </div>
+      <div class="deadline-list">
+        <div class="deadline-item">
+          <div class="deadline-date"><span class="dd">15</span><span class="mm">Μαϊ</span></div>
+          <div>
+            <div class="deadline-title">Λήξη δηλώσεων μαθημάτων</div>
+            <div class="deadline-sub">Εαρινό εξάμηνο 2025–2026</div>
+          </div>
+          <div class="deadline-badge badge-red">Σύντομα</div>
+        </div>
+        <div class="deadline-item">
+          <div class="deadline-date"><span class="dd">02</span><span class="mm">Ιουν</span></div>
+          <div>
+            <div class="deadline-title">Έναρξη εξεταστικής περιόδου Ιουνίου</div>
+            <div class="deadline-sub">ΠΠΣ & ΕΚΜΣ</div>
+          </div>
+          <div class="deadline-badge badge-blue">Επερχόμενο</div>
+        </div>
+        <div class="deadline-item">
+          <div class="deadline-date"><span class="dd">20</span><span class="mm">Ιουν</span></div>
+          <div>
+            <div class="deadline-title">Λήξη εξεταστικής Ιουνίου</div>
+            <div class="deadline-sub">ΠΠΣ & ΕΚΜΣ</div>
+          </div>
+          <div class="deadline-badge badge-blue">Επερχόμενο</div>
+        </div>
+        <div class="deadline-item">
+          <div class="deadline-date"><span class="dd">01</span><span class="mm">Σεπ</span></div>
+          <div>
+            <div class="deadline-title">Εξεταστική Σεπτεμβρίου</div>
+            <div class="deadline-sub">ΠΠΣ & ΕΚΜΣ</div>
+          </div>
+          <div class="deadline-badge badge-green">Σεπτέμβριος</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: ΕΓΓΡΑΦΑ -->
+  <div class="docs-section" id="eggrafa">
+    <div class="sec-label">Χρήσιμα Αρχεία</div>
+    <h2 class="sec-title">Έγγραφα & Αιτήσεις</h2>
+    <div class="doc-list">
+      <a href="https://theo.auth.gr/wp-content/uploads/2024/11/prokyrixi_didaktoriko__ADA.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Κανονισμός Διδακτορικών Σπουδών</div>
+          <div class="doc-meta">PDF · Ενημερωμένος 2024</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+      <a href="https://theo.auth.gr/wp-content/uploads/2024/12/kanonismos__2024_2025.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon blue">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Κανονισμός Πρακτικής Άσκησης 2024–2025</div>
+          <div class="doc-meta">PDF · Πρακτική Άσκηση ΕΣΠΑ</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+      <a href="https://theo.auth.gr/wp-content/uploads/2023/11/praktiki_askisi_ESPA_2023.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon green">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Πληροφορίες Πρακτικής Άσκησης ΕΣΠΑ</div>
+          <div class="doc-meta">PDF · Περιγραφή & οδηγίες</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+      <a href="https://theo.auth.gr/wp-content/uploads/2023/11/epikairopoiisi_metadidaktoriki_FEK.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon purple">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Κανονισμός Μεταδιδακτορικής Έρευνας</div>
+          <div class="doc-meta">PDF · ΦΕΚ — Επικαιροποίηση 2023</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+      <a href="https://new.theo.auth.gr/wp-content/uploads/2021/12/kanonismos_did_spoudon.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Κανονισμός ΠΔΣ (Προγράμματος Διδακτορικών)</div>
+          <div class="doc-meta">PDF · 2021</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+      <a href="https://new.theo.auth.gr/wp-content/uploads/2023/07/Final-Accreditation-Report-Theology-Aristotle-University-of-Thessaloniki.pdf" class="doc-item" target="_blank">
+        <div class="doc-icon blue">📄</div>
+        <div class="doc-info">
+          <div class="doc-title">Έκθεση Πιστοποίησης ΕΘΑΑΕ — ΠΠΣ Θεολογίας</div>
+          <div class="doc-meta">PDF · ΕΘΑΑΕ 2023</div>
+        </div>
+        <div class="doc-arrow">↓</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SECTION: ΧΡΗΣΙΜΑ LINKS -->
+  <div id="voithoi">
+    <div class="sec-label">Εξωτερικές Υπηρεσίες</div>
+    <h2 class="sec-title">Χρήσιμες Πλατφόρμες</h2>
+    <div class="cards-grid">
+      <a href="https://eclass.auth.gr" class="card" target="_blank">
+        <div class="card-icon">💻</div>
+        <div class="card-title">e-Class ΑΠΘ</div>
+        <div class="card-desc">Υλικό μαθημάτων, ανακοινώσεις καθηγητών, εργασίες.</div>
+        <div class="card-link">Είσοδος →</div>
+      </a>
+      <a href="https://www.lib.auth.gr" class="card" target="_blank">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Βιβλιοθήκη ΑΠΘ</div>
+        <div class="card-desc">Ηλεκτρονικές βάσεις δεδομένων, δανεισμός βιβλίων, ψηφιακές πηγές.</div>
+        <div class="card-link">Αναζήτηση →</div>
+      </a>
+      <a href="https://www.praktiki.auth.gr" class="card" target="_blank">
+        <div class="card-icon">🏢</div>
+        <div class="card-title">Πρακτική Άσκηση</div>
+        <div class="card-desc">Πλατφόρμα διαχείρισης πρακτικής άσκησης ΕΣΠΑ ΑΠΘ.</div>
+        <div class="card-link">Πλατφόρμα →</div>
+      </a>
+      <a href="https://eurep.auth.gr/el/students/studies" class="card" target="_blank">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Erasmus+</div>
+        <div class="card-desc">Κινητικότητα φοιτητών, σπουδές στο εξωτερικό, προθεσμίες αιτήσεων.</div>
+        <div class="card-link">Πληροφορίες →</div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <!-- AI Βοηθοί -->
+  <div class="ai-s-card" id="voithoi">
+    <div class="sec-label">24/7 Διαθέσιμο</div>
+    <h3 class="sec-title">Ψηφιακοί Βοηθοί</h3>
+    <p>Ρώτα για ύλη, εξετάσεις, βιβλιογραφία — απαντούν αποκλειστικά από το υλικό των καθηγητών σου.</p>
+    <a href="https://edu-assistants.theo.auth.gr" class="btn-full" target="_blank">Άνοιξε τον Βοηθό →</a>
+  </div>
+
+  <!-- Γραμματεία -->
+  <div class="s-card" id="grammateia">
+    <div class="sec-label">Επικοινωνία</div>
+    <h3 class="sec-title">Γραμματεία</h3>
+    <div class="contact-list">
+      <div class="contact-row">
+        <div class="contact-label">Προπτυχιακά (ΠΠΣ)</div>
+        <div class="contact-val"><a href="tel:2310996983">2310 996983</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">ΕΚΜΣ · Διδακτορικά</div>
+        <div class="contact-val"><a href="tel:2310996981">2310 996981</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Μεταπτυχιακά (ΠΜΣ)</div>
+        <div class="contact-val"><a href="tel:2310996982">2310 996982</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Email ΠΠΣ</div>
+        <div class="contact-val"><a href="mailto:info@theo.auth.gr">info@theo.auth.gr</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Email ΕΚΜΣ</div>
+        <div class="contact-val"><a href="mailto:info-islam-studies@theo.auth.gr">info-islam-studies@<br>theo.auth.gr</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ώρες -->
+  <div class="s-card">
+    <div class="sec-label">Λειτουργία</div>
+    <h3 class="sec-title">Ώρες Γραμματείας</h3>
+    <div class="hours-list">
+      <div class="hours-row"><span class="hours-day">Δευτέρα</span><span class="hours-time">11:00 – 13:00</span></div>
+      <div class="hours-row"><span class="hours-day">Τρίτη</span><span class="hours-time">11:00 – 13:00</span></div>
+      <div class="hours-row"><span class="hours-day">Τετάρτη</span><span class="hours-time">11:00 – 13:00</span></div>
+      <div class="hours-row"><span class="hours-day">Πέμπτη</span><span class="hours-time">11:00 – 13:00</span></div>
+      <div class="hours-row"><span class="hours-day">Παρασκευή</span><span class="hours-time">11:00 – 13:00</span></div>
+      <div class="hours-row"><span class="hours-day">Σάββατο</span><span class="hours-time closed">Κλειστά</span></div>
+    </div>
+  </div>
+
+  <!-- Χρήσιμα -->
+  <div class="s-card">
+    <div class="sec-label">Σύνδεσμοι</div>
+    <h3 class="sec-title">Χρήσιμα</h3>
+    <ul class="u-links">
+      <li><a href="https://www.auth.gr/ects/" target="_blank">Οδηγός ECTS</a></li>
+      <li><a href="https://eurep.auth.gr/el/students/studies" target="_blank">Κινητικότητα Erasmus+</a></li>
+      <li><a href="https://www.didaktorika.gr/eadd/?locale=el" target="_blank">Εθνικό Αρχείο Διατριβών</a></li>
+      <li><a href="https://eclass.auth.gr" target="_blank">e-Class ΑΠΘ</a></li>
+      <li><a href="https://www.lib.auth.gr" target="_blank">Βιβλιοθήκη ΑΠΘ</a></li>
+    </ul>
+  </div>
+
+</aside>
+</div>
+
+<!-- FOOTER -->
+<footer style="background:#0f1929;color:rgba(255,255,255,0.6);padding:40px;text-align:center;font-size:13px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="font-family:'EB Garamond',serif;font-size:18px;color:white;margin-bottom:6px;">Τμήμα Θεολογίας ΑΠΘ</div>
+    <div style="margin-bottom:16px;">Θεολογική Σχολή · 54124 Θεσσαλονίκη · info@theo.auth.gr</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);">© 2026 Τμήμα Θεολογίας ΑΠΘ · <a href="theo_auth_redesign.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">← Αρχική</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

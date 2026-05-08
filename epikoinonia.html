@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Επικοινωνία — Τμήμα Θεολογίας ΑΠΘ</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1a2c4e;--gold:#9a7b2e;--gold-light:#c9a84c;--cream:#f8f5ef;--warm-white:#fdfcf9;--text:#2d2d2d;--text-light:#5c5c5c;--border:#ddd5c4;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--warm-white);color:var(--text);font-size:16px;line-height:1.6;}
+  header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+  .header-top{background:#111e35;padding:6px 40px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.55);}
+  .header-top a{color:rgba(255,255,255,0.55);text-decoration:none;}
+  .header-top a:hover{color:var(--gold-light);}
+  .header-main{padding:14px 40px;display:flex;align-items:center;gap:20px;}
+  .logo-area{display:flex;align-items:center;gap:14px;text-decoration:none;}
+  .logo-emblem{width:52px;height:52px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-size:22px;color:white;font-weight:600;flex-shrink:0;}
+  .logo-text .institution{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;}
+  .logo-text .dept{font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:white;line-height:1.2;}
+  nav{margin-left:auto;display:flex;}
+  nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:13.5px;padding:8px 16px;transition:color 0.2s;position:relative;}
+  nav a:hover,nav a.active{color:var(--gold-light);}
+  nav a::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;background:var(--gold-light);transform:scaleX(0);transition:transform 0.2s;}
+  nav a:hover::after,nav a.active::after{transform:scaleX(1);}
+  .page-hero{background:var(--navy);padding:48px 40px;position:relative;overflow:hidden;}
+  .page-hero::before{content:'ΕΠΙΚΟΙΝΩΝΙΑ';position:absolute;right:-10px;top:-20px;font-family:'EB Garamond',serif;font-size:100px;color:rgba(255,255,255,0.03);font-weight:600;pointer-events:none;}
+  .page-hero-inner{max-width:1200px;margin:0 auto;}
+  .breadcrumb{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+  .breadcrumb a{color:rgba(255,255,255,0.4);text-decoration:none;}
+  .breadcrumb span{margin:0 6px;}
+  .page-hero h1{font-family:'EB Garamond',serif;font-size:42px;color:white;font-weight:500;margin-bottom:10px;}
+  .page-hero p{color:rgba(255,255,255,0.6);font-size:16px;max-width:560px;}
+  .main-wrap{max-width:1200px;margin:0 auto;padding:50px 40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .sec-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+  .sec-title{font-family:'EB Garamond',serif;font-size:26px;color:var(--navy);margin-bottom:24px;padding-bottom:14px;border-bottom:2px solid var(--border);position:relative;}
+  .sec-title::after{content:'';position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:var(--gold);}
+  .contact-block{background:white;border:1px solid var(--border);padding:28px;margin-bottom:20px;}
+  .contact-block h3{font-family:'EB Garamond',serif;font-size:18px;color:var(--navy);margin-bottom:16px;font-weight:500;}
+  .contact-row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
+  .contact-icon{width:32px;height:32px;background:var(--cream);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+  .contact-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);font-weight:600;margin-bottom:2px;}
+  .contact-value{font-size:14px;color:var(--navy);}
+  .contact-value a{color:var(--navy);text-decoration:none;}
+  .contact-value a:hover{color:var(--gold);}
+  .hours-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .hours-table tr{border-bottom:1px solid var(--border);}
+  .hours-table tr:last-child{border-bottom:none;}
+  .hours-table td{padding:10px 0;}
+  .hours-table td:first-child{color:var(--text-light);}
+  .hours-table td:last-child{color:var(--navy);font-weight:600;text-align:right;}
+  .hours-table .closed{color:#dc2626 !important;}
+  .map-placeholder{background:var(--cream);border:1px solid var(--border);height:300px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-light);font-size:14px;margin-bottom:20px;}
+  .map-placeholder a{color:var(--gold);font-weight:600;text-decoration:none;}
+  .map-placeholder a:hover{color:var(--navy);}
+  .transport-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .transport-list li{display:flex;gap:10px;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .transport-list li:last-child{border-bottom:none;}
+  .transport-icon{font-size:18px;flex-shrink:0;}
+  footer{background:#0f1929;color:rgba(255,255,255,0.6);padding:40px;text-align:center;font-size:13px;margin-top:60px;}
+  .dept-name{font-family:'EB Garamond',serif;font-size:18px;color:white;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <span>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης · Θεολογική Σχολή</span>
+    <div style="display:flex;gap:20px;"><a href="#">Χάρτης Site</a><a href="epikoinonia.html" style="color:rgba(255,255,255,0.8)">Επικοινωνία</a><a href="#" style="color:rgba(255,255,255,0.8)">ΕΛ</a><a href="#">EN</a></div>
+  </div>
+  <div class="header-main">
+    <a href="theo_auth_redesign.html" class="logo-area">
+      <div class="logo-emblem">ΑΠΘ</div>
+      <div class="logo-text">
+        <div class="institution">Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης</div>
+        <div class="dept">Τμήμα Θεολογίας</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#">Τμήμα</a>
+      <a href="foitites.html">Φοιτητές</a>
+      <a href="spoydes.html">Σπουδές</a>
+      <a href="prosopiko.html">Διδακτικό Προσωπικό</a>
+      <a href="erevna.html">Έρευνα</a>
+      <a href="anakoinoseis.html">Ανακοινώσεις</a>
+      <a href="epikoinonia.html" class="active" style="border-left:1px solid rgba(255,255,255,0.15);margin-left:8px;padding-left:8px;">Επικοινωνία</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="theo_auth_redesign.html" style="color:rgba(255,255,255,0.4);text-decoration:none;">Αρχική</a><span style="margin:0 6px;">›</span><span style="color:rgba(255,255,255,0.7)">Επικοινωνία</span></div>
+    <h1>Επικοινωνία</h1>
+    <p>Γραμματεία, τηλέφωνα, διεύθυνση και οδηγίες πρόσβασης στο Τμήμα Θεολογίας ΑΠΘ</p>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- LEFT -->
+  <div>
+    <div class="sec-label">Στοιχεία Επικοινωνίας</div>
+    <h2 class="sec-title">Γραμματεία</h2>
+
+    <div class="contact-block">
+      <h3>📞 Τηλέφωνα</h3>
+      <div class="contact-row">
+        <div class="contact-icon">☎</div>
+        <div><div class="contact-label">Προπτυχιακά (ΠΠΣ)</div><div class="contact-value"><a href="tel:2310996983">2310 996983</a></div></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">☎</div>
+        <div><div class="contact-label">ΕΚΜΣ & Διδακτορικά</div><div class="contact-value"><a href="tel:2310996981">2310 996981</a></div></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">☎</div>
+        <div><div class="contact-label">Μεταπτυχιακά (ΠΜΣ)</div><div class="contact-value"><a href="tel:2310996982">2310 996982</a></div></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">☎</div>
+        <div><div class="contact-label">Κέντρο Τμήματος</div><div class="contact-value"><a href="tel:2310996980">2310 996980</a></div></div>
+      </div>
+    </div>
+
+    <div class="contact-block">
+      <h3>✉️ Email</h3>
+      <div class="contact-row">
+        <div class="contact-icon">@</div>
+        <div><div class="contact-label">Γραμματεία ΠΠΣ</div><div class="contact-value"><a href="mailto:info@theo.auth.gr">info@theo.auth.gr</a></div></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">@</div>
+        <div><div class="contact-label">Γραμματεία ΕΚΜΣ</div><div class="contact-value"><a href="mailto:info-islam-studies@theo.auth.gr">info-islam-studies@theo.auth.gr</a></div></div>
+      </div>
+    </div>
+
+    <div class="contact-block">
+      <h3>🕐 Ώρες Γραμματείας</h3>
+      <table class="hours-table">
+        <tr><td>Δευτέρα</td><td>11:00 – 13:00</td></tr>
+        <tr><td>Τρίτη</td><td>11:00 – 13:00</td></tr>
+        <tr><td>Τετάρτη</td><td>11:00 – 13:00</td></tr>
+        <tr><td>Πέμπτη</td><td>11:00 – 13:00</td></tr>
+        <tr><td>Παρασκευή</td><td>11:00 – 13:00</td></tr>
+        <tr><td>Σάββατο</td><td class="closed">Κλειστά</td></tr>
+        <tr><td>Κυριακή</td><td class="closed">Κλειστά</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <div class="sec-label">Τοποθεσία</div>
+    <h2 class="sec-title">Πρόσβαση</h2>
+
+    <div class="contact-block" style="margin-bottom:20px;">
+      <h3>📍 Διεύθυνση</h3>
+      <div class="contact-row">
+        <div class="contact-icon">🏛</div>
+        <div>
+          <div class="contact-label">Τμήμα Θεολογίας ΑΠΘ</div>
+          <div class="contact-value">Θεολογική Σχολή ΑΠΘ<br>Πανεπιστημιούπολη<br>54124 Θεσσαλονίκη</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-placeholder">
+      <div style="font-size:32px;">🗺️</div>
+      <div style="font-weight:600;color:var(--navy);">Χάρτης — Τμήμα Θεολογίας ΑΠΘ</div>
+      <a href="https://maps.google.com/?q=Τμήμα+Θεολογίας+ΑΠΘ+Θεσσαλονίκη" target="_blank">Άνοιγμα στο Google Maps →</a>
+    </div>
+
+    <div class="contact-block">
+      <h3>🚌 Πρόσβαση</h3>
+      <ul class="transport-list">
+        <li><span class="transport-icon">🚇</span><div><strong>Μετρό:</strong> Σταθμός ΑΠΘ — απευθείας μπροστά από την Πανεπιστημιούπολη</div></li>
+        <li><span class="transport-icon">🚌</span><div><strong>Λεωφορείο:</strong> Γραμμές 5, 31, 39, 57 — Στάση ΑΠΘ</div></li>
+        <li><span class="transport-icon">🚗</span><div><strong>Αυτοκίνητο:</strong> Parking εντός Πανεπιστημιούπολης (είσοδος από Εγνατία)</div></li>
+        <li><span class="transport-icon">🚶</span><div><strong>Πεζή:</strong> 15 λεπτά από κέντρο Θεσσαλονίκης</div></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="dept-name">Τμήμα Θεολογίας ΑΠΘ</div>
+    <div style="margin-bottom:16px;">Θεολογική Σχολή · 54124 Θεσσαλονίκη · info@theo.auth.gr</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);">© 2026 Τμήμα Θεολογίας ΑΠΘ · <a href="theo_auth_redesign.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">← Αρχική</a></div>
+  </div>
+</footer>
+</body>
+</html>

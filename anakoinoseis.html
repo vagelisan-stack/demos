@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ανακοινώσεις — Τμήμα Θεολογίας ΑΠΘ</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1a2c4e;--gold:#9a7b2e;--gold-light:#c9a84c;--cream:#f8f5ef;--warm-white:#fdfcf9;--text:#2d2d2d;--text-light:#5c5c5c;--border:#ddd5c4;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--warm-white);color:var(--text);font-size:16px;line-height:1.6;}
+  header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+  .header-top{background:#111e35;padding:6px 40px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.55);}
+  .header-top a{color:rgba(255,255,255,0.55);text-decoration:none;}
+  .header-top a:hover{color:var(--gold-light);}
+  .header-main{padding:14px 40px;display:flex;align-items:center;gap:20px;}
+  .logo-area{display:flex;align-items:center;gap:14px;text-decoration:none;}
+  .logo-emblem{width:52px;height:52px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-size:22px;color:white;font-weight:600;flex-shrink:0;}
+  .logo-text .institution{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;}
+  .logo-text .dept{font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:white;line-height:1.2;}
+  nav{margin-left:auto;display:flex;}
+  nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:13.5px;padding:8px 16px;transition:color 0.2s;position:relative;}
+  nav a:hover,nav a.active{color:var(--gold-light);}
+  nav a::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;background:var(--gold-light);transform:scaleX(0);transition:transform 0.2s;}
+  nav a:hover::after,nav a.active::after{transform:scaleX(1);}
+  .page-hero{background:var(--navy);padding:48px 40px;position:relative;overflow:hidden;}
+  .page-hero::before{content:'ΑΝΑΚΟΙΝΩΣΕΙΣ';position:absolute;right:-10px;top:-20px;font-family:'EB Garamond',serif;font-size:90px;color:rgba(255,255,255,0.03);font-weight:600;pointer-events:none;}
+  .page-hero-inner{max-width:1200px;margin:0 auto;}
+  .breadcrumb{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+  .breadcrumb a{color:rgba(255,255,255,0.4);text-decoration:none;}
+  .breadcrumb span{margin:0 6px;}
+  .page-hero h1{font-family:'EB Garamond',serif;font-size:42px;color:white;font-weight:500;margin-bottom:10px;}
+  .page-hero p{color:rgba(255,255,255,0.6);font-size:16px;max-width:560px;}
+  .main-wrap{max-width:1200px;margin:0 auto;padding:50px 40px;display:grid;grid-template-columns:1fr 280px;gap:56px;}
+
+  /* Filters */
+  .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+  .filter-btn{padding:7px 16px;font-size:12px;font-weight:600;letter-spacing:0.04em;border:1px solid var(--border);background:white;cursor:pointer;transition:all 0.15s;color:var(--text-light);}
+  .filter-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
+
+  /* Announcement items */
+  .ann-list{display:flex;flex-direction:column;gap:0;}
+  .ann-item{display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:start;padding:20px 0;border-bottom:1px solid var(--border);transition:background 0.15s;}
+  .ann-item:hover{background:var(--cream);margin:0 -12px;padding:20px 12px;border-radius:4px;}
+  .ann-item.hidden{display:none;}
+  .ann-date{text-align:center;background:var(--navy);color:white;padding:8px 4px;border-radius:3px;}
+  .ann-date .day{font-family:'EB Garamond',serif;font-size:24px;line-height:1;display:block;}
+  .ann-date .mon{font-size:10px;opacity:0.65;text-transform:uppercase;letter-spacing:0.05em;}
+  .ann-date .year{font-size:10px;opacity:0.5;}
+  .ann-body{}
+  .ann-cat{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-bottom:6px;}
+  .cat-pps{background:#dbeafe;color:#1d4ed8;}
+  .cat-did{background:#ede9fe;color:#6d28d9;}
+  .cat-meta{background:#fef3c7;color:#92400e;}
+  .cat-pms{background:#dcfce7;color:#15803d;}
+  .cat-gen{background:#f1f5f9;color:#475569;}
+  .cat-ethaae{background:#fee2e2;color:#b91c1c;}
+  .ann-title{font-size:15px;font-weight:600;color:var(--navy);line-height:1.4;margin-bottom:4px;}
+  .ann-meta-txt{font-size:12px;color:var(--text-light);}
+  .ann-pdf{display:inline-flex;align-items:center;gap:4px;background:var(--cream);border:1px solid var(--border);padding:4px 10px;font-size:11px;font-weight:600;color:var(--navy);text-decoration:none;border-radius:2px;white-space:nowrap;flex-shrink:0;align-self:center;}
+  .ann-pdf:hover{background:var(--navy);color:white;border-color:var(--navy);}
+
+  /* Sidebar */
+  .sec-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+  .sec-title{font-family:'EB Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border);position:relative;}
+  .sec-title::after{content:'';position:absolute;bottom:-2px;left:0;width:40px;height:2px;background:var(--gold);}
+  .s-card{background:var(--cream);border:1px solid var(--border);padding:20px;margin-bottom:24px;}
+  .u-links{list-style:none;}
+  .u-links li{border-bottom:1px solid var(--border);}
+  .u-links li:last-child{border-bottom:none;}
+  .u-links a{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:13px;color:var(--navy);text-decoration:none;transition:color 0.15s;}
+  .u-links a:hover{color:var(--gold);}
+  .u-links a::after{content:'›';font-size:18px;color:var(--gold);}
+  .ai-card{background:var(--navy);padding:20px;position:relative;overflow:hidden;}
+  .ai-card::after{content:'🎓';position:absolute;right:8px;bottom:8px;font-size:50px;opacity:0.08;}
+  .ai-card .sec-label{color:var(--gold-light);}
+  .ai-card .sec-title{color:white;border-color:rgba(255,255,255,0.1);}
+  .ai-card .sec-title::after{background:var(--gold-light);}
+  .ai-card p{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin-bottom:14px;}
+  .btn-full{display:block;background:var(--gold);color:white;text-align:center;padding:10px;font-size:13px;font-weight:600;text-decoration:none;transition:background 0.2s;}
+  .btn-full:hover{background:var(--gold-light);}
+
+  footer{background:#0f1929;color:rgba(255,255,255,0.6);padding:40px;text-align:center;font-size:13px;margin-top:60px;}
+  .dept-name{font-family:'EB Garamond',serif;font-size:18px;color:white;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <span>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης · Θεολογική Σχολή</span>
+    <div style="display:flex;gap:20px;"><a href="#">Χάρτης Site</a><a href="epikoinonia.html">Επικοινωνία</a><a href="#" style="color:rgba(255,255,255,0.8)">ΕΛ</a><a href="#">EN</a></div>
+  </div>
+  <div class="header-main">
+    <a href="theo_auth_redesign.html" class="logo-area">
+      <div class="logo-emblem">ΑΠΘ</div>
+      <div class="logo-text">
+        <div class="institution">Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης</div>
+        <div class="dept">Τμήμα Θεολογίας</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#">Τμήμα</a>
+      <a href="foitites.html">Φοιτητές</a>
+      <a href="spoydes.html">Σπουδές</a>
+      <a href="prosopiko.html">Διδακτικό Προσωπικό</a>
+      <a href="erevna.html">Έρευνα</a>
+      <a href="anakoinoseis.html" class="active">Ανακοινώσεις</a>
+      <a href="epikoinonia.html" style="border-left:1px solid rgba(255,255,255,0.15);margin-left:8px;padding-left:8px;">Επικοινωνία</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="theo_auth_redesign.html">Αρχική</a><span>›</span><span style="color:rgba(255,255,255,0.7)">Ανακοινώσεις</span></div>
+    <h1>Ανακοινώσεις</h1>
+    <p>Επίσημες ανακοινώσεις Τμήματος Θεολογίας ΑΠΘ</p>
+  </div>
+</div>
+
+<div class="main-wrap">
+<main>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterAnn('all', this)">Όλες</button>
+    <button class="filter-btn" onclick="filterAnn('pps', this)">ΠΠΣ</button>
+    <button class="filter-btn" onclick="filterAnn('did', this)">Διδακτορικά</button>
+    <button class="filter-btn" onclick="filterAnn('meta', this)">Μεταδιδακτορικά</button>
+    <button class="filter-btn" onclick="filterAnn('pms', this)">ΠΜΣ</button>
+    <button class="filter-btn" onclick="filterAnn('ethaae', this)">ΕΘΑΑΕ</button>
+    <button class="filter-btn" onclick="filterAnn('gen', this)">Γενικές</button>
+  </div>
+
+  <div class="ann-list" id="ann-list">
+
+    <div class="ann-item" data-cat="gen">
+      <div class="ann-date"><span class="day">06</span><span class="mon">Απρ</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-gen">Γενικές</span>
+        <div class="ann-title">Ανακοίνωση Τμήματος για τα επεισόδια κατά τη «Λατρευτική Εβδομάδα» Θεσσαλονίκης</div>
+        <div class="ann-meta-txt">Τμήμα Θεολογίας ΑΠΘ</div>
+      </div>
+      <a href="https://theo.auth.gr" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="meta">
+      <div class="ann-date"><span class="day">01</span><span class="mon">Απρ</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-meta">Μεταδιδακτορικά</span>
+        <div class="ann-title">Πίνακας επιτυχόντων μεταδιδακτορικών ερευνητών — Ακαδ. Έτος 2025-2026</div>
+        <div class="ann-meta-txt">Αποτελέσματα επιλογής</div>
+      </div>
+      <a href="https://theo.auth.gr" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="pps">
+      <div class="ann-date"><span class="day">29</span><span class="mon">Μαρ</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-pps">ΠΠΣ</span>
+        <div class="ann-title">Οριστικός Πίνακας Διαγραφών Προπτυχιακών Φοιτητών ΠΠΣ και ΕΚΜΣ</div>
+        <div class="ann-meta-txt">Γραμματεία ΠΠΣ</div>
+      </div>
+      <a href="https://theo.auth.gr" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="did">
+      <div class="ann-date"><span class="day">24</span><span class="mon">Μαρ</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-did">Διδακτορικά</span>
+        <div class="ann-title">Επικείμενη διαγραφή λιμναζόντων υποψηφίων διδακτόρων Τμήματος Θεολογίας ΑΠΘ</div>
+        <div class="ann-meta-txt">Γραμματεία Διδακτορικών Σπουδών</div>
+      </div>
+      <a href="https://theo.auth.gr" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="gen">
+      <div class="ann-date"><span class="day">23</span><span class="mon">Μαρ</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-gen">Γενικές</span>
+        <div class="ann-title">Λόγω Εθνικής Εορτής 25ης Μαρτίου — Αλλαγές στο πρόγραμμα Φροντιστηρίου Λειτουργικής</div>
+        <div class="ann-meta-txt">Πρόγραμμα μαθημάτων</div>
+      </div>
+      <span class="ann-pdf" style="background:var(--cream);color:var(--text-light);cursor:default;">Ανακοίνωση</span>
+    </div>
+
+    <div class="ann-item" data-cat="did">
+      <div class="ann-date"><span class="day">15</span><span class="mon">Ιαν</span><span class="year">2026</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-did">Διδακτορικά</span>
+        <div class="ann-title">Προκήρυξη Διδακτορικών Σπουδών Ακαδημαϊκού Έτους 2024-2025</div>
+        <div class="ann-meta-txt">Τμήμα Θεολογίας ΑΠΘ · Προκήρυξη</div>
+      </div>
+      <a href="https://theo.auth.gr/wp-content/uploads/2024/11/prokyrixi_didaktoriko__ADA.pdf" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="meta">
+      <div class="ann-date"><span class="day">26</span><span class="mon">Ιαν</span><span class="year">2024</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-meta">Μεταδιδακτορικά</span>
+        <div class="ann-title">Προκήρυξη Μεταδιδακτορικής Έρευνας Ακαδ. Έτους 2023-2024</div>
+        <div class="ann-meta-txt">Τμήμα Θεολογίας ΑΠΘ</div>
+      </div>
+      <a href="https://theo.auth.gr/wp-content/uploads/2024/01/prokyrixi_metadidaktorikoi_26_1_2024.pdf" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="ethaae">
+      <div class="ann-date"><span class="day">12</span><span class="mon">Ιουλ</span><span class="year">2023</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-ethaae">ΕΘΑΑΕ</span>
+        <div class="ann-title">Έκθεση Πιστοποίησης ΠΠΣ Θεολογίας — ΕΘΑΑΕ 2023</div>
+        <div class="ann-meta-txt">Αποτέλεσμα αξιολόγησης προγράμματος σπουδών</div>
+      </div>
+      <a href="https://theo.auth.gr/wp-content/uploads/2023/07/Final-Accreditation-Report-Theology-Aristotle-University-of-Thessaloniki.pdf" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="ethaae">
+      <div class="ann-date"><span class="day">12</span><span class="mon">Ιουλ</span><span class="year">2023</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-ethaae">ΕΘΑΑΕ</span>
+        <div class="ann-title">Έκθεση Πιστοποίησης ΠΠΣ Ισλαμικών Σπουδών (ΕΚΜΣ) — ΕΘΑΑΕ 2023</div>
+        <div class="ann-meta-txt">Αποτέλεσμα αξιολόγησης προγράμματος σπουδών</div>
+      </div>
+      <a href="https://theo.auth.gr/wp-content/uploads/2023/07/Final-Accreditation-Report-Islamic-Studies-Aristotle-University-of-Thessaloniki.pdf" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+    <div class="ann-item" data-cat="pps">
+      <div class="ann-date"><span class="day">01</span><span class="mon">Σεπ</span><span class="year">2023</span></div>
+      <div class="ann-body">
+        <span class="ann-cat cat-pps">ΠΠΣ</span>
+        <div class="ann-title">Κανονισμός Πρακτικής Άσκησης ΕΣΠΑ 2024-2025</div>
+        <div class="ann-meta-txt">Γραμματεία ΠΠΣ · Πρακτική Άσκηση</div>
+      </div>
+      <a href="https://theo.auth.gr/wp-content/uploads/2024/12/kanonismos__2024_2025.pdf" class="ann-pdf" target="_blank">📄 PDF</a>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- Sidebar -->
+<aside>
+  <div class="s-card">
+    <div class="sec-label">Γρήγορη Πρόσβαση</div>
+    <h3 class="sec-title">Κατηγορίες</h3>
+    <ul class="u-links">
+      <li><a href="#" onclick="filterAnn('pps',null);return false;">Προπτυχιακά (ΠΠΣ)</a></li>
+      <li><a href="#" onclick="filterAnn('did',null);return false;">Διδακτορικά</a></li>
+      <li><a href="#" onclick="filterAnn('meta',null);return false;">Μεταδιδακτορικά</a></li>
+      <li><a href="#" onclick="filterAnn('pms',null);return false;">Μεταπτυχιακά (ΠΜΣ)</a></li>
+      <li><a href="#" onclick="filterAnn('ethaae',null);return false;">ΕΘΑΑΕ</a></li>
+      <li><a href="#" onclick="filterAnn('gen',null);return false;">Γενικές</a></li>
+    </ul>
+  </div>
+
+  <div class="ai-card">
+    <div class="sec-label">24/7 Διαθέσιμο</div>
+    <h3 class="sec-title">Ψηφιακοί Βοηθοί</h3>
+    <p>Ερωτήσεις για ανακοινώσεις, προθεσμίες και διαδικασίες; Ο Οδηγός Σπουδών απαντάει αμέσως.</p>
+    <a href="https://edu-assistants.theo.auth.gr" class="btn-full" target="_blank">Ρώτα τον Βοηθό →</a>
+  </div>
+
+  <div class="s-card">
+    <div class="sec-label">Επικοινωνία</div>
+    <h3 class="sec-title">Γραμματεία</h3>
+    <ul class="u-links">
+      <li><a href="tel:2310996983">ΠΠΣ: 2310 996983</a></li>
+      <li><a href="tel:2310996981">ΔΣ: 2310 996981</a></li>
+      <li><a href="tel:2310996982">ΠΜΣ: 2310 996982</a></li>
+      <li><a href="mailto:info@theo.auth.gr">info@theo.auth.gr</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="dept-name">Τμήμα Θεολογίας ΑΠΘ</div>
+    <div style="margin-bottom:16px;">Θεολογική Σχολή · 54124 Θεσσαλονίκη · info@theo.auth.gr</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);">© 2026 Τμήμα Θεολογίας ΑΠΘ · <a href="theo_auth_redesign.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">← Αρχική</a></div>
+  </div>
+</footer>
+
+<script>
+function filterAnn(cat, btn) {
+  // Update buttons
+  if (btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  // Filter items
+  document.querySelectorAll('.ann-item').forEach(item => {
+    if (cat === 'all' || item.dataset.cat === cat) {
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+}
+</script>
+</body>
+</html>

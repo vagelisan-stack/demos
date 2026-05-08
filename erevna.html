@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Έρευνα — Τμήμα Θεολογίας ΑΠΘ</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1a2c4e;--gold:#9a7b2e;--gold-light:#c9a84c;--cream:#f8f5ef;--warm-white:#fdfcf9;--text:#2d2d2d;--text-light:#5c5c5c;--border:#ddd5c4;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--warm-white);color:var(--text);font-size:16px;line-height:1.6;}
+  header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+  .header-top{background:#111e35;padding:6px 40px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.55);}
+  .header-top a{color:rgba(255,255,255,0.55);text-decoration:none;}
+  .header-top a:hover{color:var(--gold-light);}
+  .header-main{padding:14px 40px;display:flex;align-items:center;gap:20px;}
+  .logo-area{display:flex;align-items:center;gap:14px;text-decoration:none;}
+  .logo-emblem{width:52px;height:52px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-size:22px;color:white;font-weight:600;flex-shrink:0;}
+  .logo-text .institution{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;}
+  .logo-text .dept{font-family:'EB Garamond',serif;font-size:18px;font-weight:500;color:white;line-height:1.2;}
+  nav{margin-left:auto;display:flex;}
+  nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:13.5px;padding:8px 16px;transition:color 0.2s;position:relative;}
+  nav a:hover,nav a.active{color:var(--gold-light);}
+  nav a::after{content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;background:var(--gold-light);transform:scaleX(0);transition:transform 0.2s;}
+  nav a:hover::after,nav a.active::after{transform:scaleX(1);}
+  .page-hero{background:var(--navy);padding:48px 40px;position:relative;overflow:hidden;}
+  .page-hero::before{content:'ΕΡΕΥΝΑ';position:absolute;right:-10px;top:-20px;font-family:'EB Garamond',serif;font-size:140px;color:rgba(255,255,255,0.03);font-weight:600;pointer-events:none;}
+  .page-hero-inner{max-width:1200px;margin:0 auto;}
+  .breadcrumb{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+  .breadcrumb a{color:rgba(255,255,255,0.4);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--gold-light);}
+  .breadcrumb span{margin:0 6px;}
+  .page-hero h1{font-family:'EB Garamond',serif;font-size:42px;color:white;font-weight:500;margin-bottom:10px;}
+  .page-hero p{color:rgba(255,255,255,0.6);font-size:16px;max-width:560px;}
+  .main-wrap{max-width:1200px;margin:0 auto;padding:50px 40px;display:grid;grid-template-columns:1fr 320px;gap:56px;}
+  .sec-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
+  .sec-title{font-family:'EB Garamond',serif;font-size:26px;color:var(--navy);margin-bottom:24px;padding-bottom:14px;border-bottom:2px solid var(--border);position:relative;}
+  .sec-title::after{content:'';position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:var(--gold);}
+  .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:44px;}
+  .lab-card{background:white;border:1px solid var(--border);padding:20px;transition:box-shadow 0.2s,transform 0.2s;text-decoration:none;color:inherit;display:block;}
+  .lab-card:hover{box-shadow:0 6px 20px rgba(26,44,78,0.1);transform:translateY(-2px);}
+  .lab-icon{font-size:24px;margin-bottom:10px;}
+  .lab-title{font-family:'EB Garamond',serif;font-size:16px;color:var(--navy);margin-bottom:6px;font-weight:500;line-height:1.3;}
+  .lab-link{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-top:10px;display:block;}
+  .journal-list{display:flex;flex-direction:column;gap:0;margin-bottom:44px;}
+  .journal-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background 0.15s;}
+  .journal-item:hover{background:var(--cream);margin:0 -10px;padding:14px 10px;border-radius:4px;}
+  .j-icon{width:40px;height:40px;background:var(--navy);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .j-info .j-title{font-size:14px;font-weight:600;color:var(--navy);}
+  .j-info .j-sub{font-size:11px;color:var(--text-light);margin-top:2px;}
+  .j-arrow{margin-left:auto;color:var(--border);font-size:18px;}
+  .sidebar{display:flex;flex-direction:column;gap:28px;}
+  .s-card{background:var(--cream);border:1px solid var(--border);padding:22px;}
+  .s-card .sec-title{font-size:18px;margin-bottom:14px;}
+  .u-links{list-style:none;}
+  .u-links li{border-bottom:1px solid var(--border);}
+  .u-links li:last-child{border-bottom:none;}
+  .u-links a{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13.5px;color:var(--navy);text-decoration:none;transition:color 0.15s;}
+  .u-links a:hover{color:var(--gold);}
+  .u-links a::after{content:'›';font-size:18px;color:var(--gold);}
+  footer{background:#0f1929;color:rgba(255,255,255,0.6);padding:40px;text-align:center;font-size:13px;margin-top:60px;}
+  .dept-name{font-family:'EB Garamond',serif;font-size:18px;color:white;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <span>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης · Θεολογική Σχολή</span>
+    <div style="display:flex;gap:20px;"><a href="#">Χάρτης Site</a><a href="epikoinonia.html">Επικοινωνία</a><a href="#" style="color:rgba(255,255,255,0.8)">ΕΛ</a><a href="#">EN</a></div>
+  </div>
+  <div class="header-main">
+    <a href="theo_auth_redesign.html" class="logo-area">
+      <div class="logo-emblem">ΑΠΘ</div>
+      <div class="logo-text">
+        <div class="institution">Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης</div>
+        <div class="dept">Τμήμα Θεολογίας</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#">Τμήμα</a>
+      <a href="foitites.html">Φοιτητές</a>
+      <a href="spoydes.html">Σπουδές</a>
+      <a href="prosopiko.html">Διδακτικό Προσωπικό</a>
+      <a href="erevna.html" class="active">Έρευνα</a>
+      <a href="anakoinoseis.html">Ανακοινώσεις</a>
+      <a href="epikoinonia.html" style="border-left:1px solid rgba(255,255,255,0.15);margin-left:8px;padding-left:8px;">Επικοινωνία</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="theo_auth_redesign.html">Αρχική</a><span>›</span><span style="color:rgba(255,255,255,0.7)">Έρευνα</span></div>
+    <h1>Έρευνα</h1>
+    <p>Εργαστήρια, ερευνητικά προγράμματα, επιστημονικά περιοδικά και ακαδημαϊκές συνεργασίες</p>
+  </div>
+</div>
+
+<div class="main-wrap">
+<main>
+
+  <!-- Εργαστήρια -->
+  <div class="sec-label">Ερευνητικές Υποδομές</div>
+  <h2 class="sec-title">Εργαστήρια Τμήματος</h2>
+  <div class="lab-grid">
+    <a href="https://pedagogylab.web.auth.gr/" class="lab-card" target="_blank">
+      <div class="lab-icon">🎓</div>
+      <div class="lab-title">Εργαστήριο Παιδαγωγικής</div>
+      <div style="font-size:13px;color:var(--text-light);">Έρευνα στη θρησκευτική αγωγή και εκπαιδευτική πρακτική.</div>
+      <span class="lab-link">pedagogylab.web.auth.gr →</span>
+    </a>
+    <a href="https://socialresearchlab.web.auth.gr/" class="lab-card" target="_blank">
+      <div class="lab-icon">🔬</div>
+      <div class="lab-title">Εργαστήριο Κοινωνικής Έρευνας Θρησκείας και Πολιτισμού</div>
+      <div style="font-size:13px;color:var(--text-light);">Κοινωνιολογική και ανθρωπολογική μελέτη θρησκευτικών φαινομένων.</div>
+      <span class="lab-link">socialresearchlab.web.auth.gr →</span>
+    </a>
+    <a href="https://theolang.web.auth.gr/" class="lab-card" target="_blank">
+      <div class="lab-icon">🗣️</div>
+      <div class="lab-title">Εργαστήριο «Γλώσσες Διαλόγου και Έρευνας Θρησκειών»</div>
+      <div style="font-size:13px;color:var(--text-light);">Διαθρησκειακός διάλογος και γλωσσολογική προσέγγιση θρησκευτικών κειμένων.</div>
+      <span class="lab-link">theolang.web.auth.gr →</span>
+    </a>
+    <a href="http://chrilatpol.web.auth.gr/" class="lab-card" target="_blank">
+      <div class="lab-icon">✝️</div>
+      <div class="lab-title">Εργαστήριο «Χριστιανική Λατρεία και Πολιτισμός»</div>
+      <div style="font-size:13px;color:var(--text-light);">Μελέτη της χριστιανικής λατρευτικής παράδοσης και πολιτισμικής της έκφρασης.</div>
+      <span class="lab-link">chrilatpol.web.auth.gr →</span>
+    </a>
+    <a href="https://slav-edulab.webnode.gr/" class="lab-card" target="_blank">
+      <div class="lab-icon">🗺️</div>
+      <div class="lab-title">Εργαστήριο Σλαβικής Ιστορίας, Πολιτισμού και Ελληνοσλαβικών Σχέσεων</div>
+      <div style="font-size:13px;color:var(--text-light);">Ιστορία και πολιτισμός των σλαβικών λαών — ελληνοσλαβικές σχέσεις.</div>
+      <span class="lab-link">slav-edulab.webnode.gr →</span>
+    </a>
+    <a href="http://agiografia.web.auth.gr" class="lab-card" target="_blank">
+      <div class="lab-icon">🎨</div>
+      <div class="lab-title">Εργαστήριο Αγιογραφίας, Εκκλησιαστικής Μικροτεχνίας και Συντήρησης Έργων Τέχνης</div>
+      <div style="font-size:13px;color:var(--text-light);">Βυζαντινή τέχνη, αγιογραφία και συντήρηση εκκλησιαστικής κληρονομιάς.</div>
+      <span class="lab-link">agiografia.web.auth.gr →</span>
+    </a>
+  </div>
+
+  <!-- Ηλεκτρονικά Περιοδικά -->
+  <div class="sec-label">Επιστημονικές Εκδόσεις</div>
+  <h2 class="sec-title">Ηλεκτρονικά Περιοδικά</h2>
+  <div class="journal-list">
+    <a href="http://ejournals.lib.auth.gr/synthesis" class="journal-item" target="_blank">
+      <div class="j-icon">📰</div>
+      <div class="j-info">
+        <div class="j-title">Σύνθεσις / Synthesis</div>
+        <div class="j-sub">Θεολογική επιθεώρηση · Peer-reviewed</div>
+      </div>
+      <div class="j-arrow">→</div>
+    </a>
+    <a href="http://ejournals.lib.auth.gr/culres" class="journal-item" target="_blank">
+      <div class="j-icon">📰</div>
+      <div class="j-info">
+        <div class="j-title">Πολιτισμός και Έρευνα</div>
+        <div class="j-sub">Culture and Research · Διεπιστημονικό</div>
+      </div>
+      <div class="j-arrow">→</div>
+    </a>
+    <a href="https://ejournals.lib.auth.gr/fragmenta" class="journal-item" target="_blank">
+      <div class="j-icon">📰</div>
+      <div class="j-info">
+        <div class="j-title">Fragmenta Hellenoslavika</div>
+        <div class="j-sub">Ελληνοσλαβικές Σπουδές</div>
+      </div>
+      <div class="j-arrow">→</div>
+    </a>
+    <a href="https://ejournals.lib.auth.gr/religionteaching/issue/archive" class="journal-item" target="_blank">
+      <div class="j-icon">📰</div>
+      <div class="j-info">
+        <div class="j-title">Ζητήματα Διδακτικής των Θρησκευτικών</div>
+        <div class="j-sub">Θρησκευτική Εκπαίδευση · Διδακτική</div>
+      </div>
+      <div class="j-arrow">→</div>
+    </a>
+  </div>
+
+  <!-- Ερευνητικά Προγράμματα -->
+  <div class="sec-label">Χρηματοδοτούμενη Έρευνα</div>
+  <h2 class="sec-title">Ερευνητικά Προγράμματα</h2>
+  <p style="color:var(--text-light);font-size:14px;margin-bottom:16px;">Το Τμήμα συμμετέχει σε εθνικά και ευρωπαϊκά ερευνητικά προγράμματα. Για πλήρη λίστα τρεχόντων προγραμμάτων επισκεφτείτε τη σχετική σελίδα.</p>
+  <a href="https://theo.auth.gr/research_prog/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:white;text-decoration:none;padding:12px 24px;font-size:14px;font-weight:600;transition:background 0.2s;margin-bottom:44px;">
+    Ερευνητικά Προγράμματα →
+  </a>
+
+</main>
+
+<aside class="sidebar">
+  <div class="s-card">
+    <div class="sec-label">Συνεργασίες</div>
+    <h3 class="sec-title">Ακαδημαϊκή Συνεργασία</h3>
+    <ul class="u-links">
+      <li><a href="https://theo.auth.gr/synergasia/" target="_blank">Διεθνείς Συνεργασίες</a></li>
+      <li><a href="https://eurep.auth.gr/el/students/studies" target="_blank">Erasmus+ Κινητικότητα</a></li>
+      <li><a href="https://www.auth.gr/international/" target="_blank">Διεθνοποίηση ΑΠΘ</a></li>
+    </ul>
+  </div>
+  <div class="s-card">
+    <div class="sec-label">Χρήσιμα</div>
+    <h3 class="sec-title">Σύνδεσμοι</h3>
+    <ul class="u-links">
+      <li><a href="https://www.lib.auth.gr/" target="_blank">Βιβλιοθήκη ΑΠΘ</a></li>
+      <li><a href="https://www.didaktorika.gr/eadd/?locale=el" target="_blank">Αρχείο Διατριβών</a></li>
+      <li><a href="https://new.theo.auth.gr/wp-content/uploads/2022/01/odigies_Synthesis.pdf" target="_blank">Οδηγίες Υποβολής Άρθρων</a></li>
+      <li><a href="https://theo.auth.gr/synedria-2/" target="_blank">Συνέδρια Τμήματος</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="dept-name">Τμήμα Θεολογίας ΑΠΘ</div>
+    <div style="margin-bottom:16px;">Θεολογική Σχολή · 54124 Θεσσαλονίκη · info@theo.auth.gr</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);">© 2026 Τμήμα Θεολογίας ΑΠΘ · <a href="theo_auth_redesign.html" style="color:rgba(255,255,255,0.3);text-decoration:none;">← Αρχική</a></div>
+  </div>
+</footer>
+</body>
+</html>

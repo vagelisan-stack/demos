@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Δημιουργός Επιτηρήσεων — Edu Assistants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Syne:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080810;
+  --bg2: #0b0b16;
+  --bg3: #0f0f1c;
+  --blue: rgba(120,180,255,1);
+  --blue-dim: rgba(120,180,255,0.6);
+  --blue-faint: rgba(120,180,255,0.12);
+  --blue-border: rgba(120,180,255,0.22);
+  --text: rgba(255,255,255,0.88);
+  --text-mid: rgba(255,255,255,0.5);
+  --text-low: rgba(255,255,255,0.28);
+  --text-hint: rgba(255,255,255,0.14);
+  --border: rgba(255,255,255,0.06);
+  --border-mid: rgba(255,255,255,0.1);
+  --radius: 10px;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-head);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── MATRIX CANVAS ── */
+#matrix-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.11;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.site { position: relative; z-index: 1; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: rgba(8,8,16,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.brand-name {
+  font-family: var(--font-head);
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.nav-links { display: flex; align-items: center; gap: 24px; }
+.nav-link { font-size: 12px; color: var(--text-low); text-decoration: none; font-family: var(--font-mono); letter-spacing: 0.04em; }
+.nav-link:hover { color: var(--text-mid); }
+.nav-btn {
+  font-size: 12px; font-family: var(--font-mono);
+  border: 0.5px solid var(--blue-border);
+  color: rgba(150,200,255,0.8);
+  padding: 7px 18px; border-radius: 5px;
+  text-decoration: none;
+  background: var(--blue-faint);
+  letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+.nav-btn:hover { background: rgba(120,180,255,0.2); }
+
+/* ── PAGES ── */
+.page { display: block; }
+
+
+/* ── HERO ── */
+.hero {
+  padding: 6rem 2.5rem 5rem;
+  max-width: 760px;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blue-dim);
+  margin-bottom: 1.8rem;
+}
+.hero h1 {
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: rgba(255,255,255,0.96);
+  margin-bottom: 1.4rem;
+  letter-spacing: -0.02em;
+}
+.hero h1 em {
+  font-style: normal;
+  color: rgba(140,190,255,0.9);
+}
+.hero-lead {
+  font-size: 15px; font-weight: 400;
+  font-family: var(--font-mono);
+  color: var(--text-low);
+  line-height: 1.85;
+  max-width: 520px;
+  margin-bottom: 2.8rem;
+  letter-spacing: 0.01em;
+}
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-p {
+  background: var(--blue-faint);
+  border: 0.5px solid var(--blue-border);
+  color: rgba(175,215,255,0.92);
+  padding: 12px 26px; border-radius: 6px;
+  font-size: 13px; font-family: var(--font-mono);
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+.btn-p:hover { background: rgba(120,180,255,0.22); }
+.btn-g {
+  border: 0.5px solid var(--border-mid);
+  color: var(--text-low);
+  padding: 12px 26px; border-radius: 6px;
+  font-size: 13px; font-family: var(--font-mono);
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: border-color 0.2s;
+  cursor: pointer; background: transparent;
+}
+.btn-g:hover { border-color: rgba(255,255,255,0.2); color: var(--text-mid); }
+
+/* ── RULE ── */
+.rule { height: 0.5px; background: var(--border); margin: 0 2.5rem; }
+
+/* ── SECTION ── */
+.sec { padding: 3rem 2.5rem; }
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blue-dim);
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+.sec-title {
+  font-size: 1.15rem; font-weight: 500;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 0.4rem;
+}
+.sec-sub {
+  font-family: var(--font-mono);
+  font-size: 12px; color: var(--text-low);
+  margin-bottom: 2rem; line-height: 1.7;
+  max-width: 500px; letter-spacing: 0.01em;
+}
+
+/* ── SERVICE CARDS ── */
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.svc {
+  background: var(--bg2);
+  padding: 1.6rem 1.4rem 1.4rem;
+  display: flex; flex-direction: column;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.svc:hover { background: var(--bg3); }
+.svc-num {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.12em;
+  color: var(--blue-dim); opacity: 0.5;
+  margin-bottom: 1.1rem;
+}
+.svc-title { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.82); margin-bottom: 0.45rem; }
+.svc-desc {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--text-low);
+  line-height: 1.7; flex: 1; letter-spacing: 0.01em;
+}
+.svc-tag {
+  display: inline-block; margin-top: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(120,180,255,0.55);
+  border: 0.5px solid rgba(120,180,255,0.18);
+  padding: 3px 9px; border-radius: 9px;
+  align-self: flex-start;
+}
+.svc-soon {
+  display: inline-block; margin-top: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(160,220,160,0.55);
+  border: 0.5px solid rgba(160,220,160,0.2);
+  padding: 3px 9px; border-radius: 9px;
+  align-self: flex-start;
+}
+.svc-arrow {
+  margin-top: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--blue-dim);
+  opacity: 0; transition: opacity 0.2s;
+  align-self: flex-start;
+}
+.svc:hover .svc-arrow { opacity: 0.6; }
+
+/* ── HOW IT WORKS ── */
+.how-block {
+  background: rgba(120,180,255,0.025);
+  border: 0.5px solid var(--blue-border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.how-block h3 { font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.78); margin-bottom: 1.6rem; }
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.6rem;
+}
+.step-n {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--blue-dim); opacity: 0.55;
+  text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.step-t { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.72); margin-bottom: 0.35rem; }
+.step-d { font-family: var(--font-mono); font-size: 11px; color: var(--text-low); line-height: 1.65; letter-spacing: 0.01em; }
+
+/* ── CTA BLOCK ── */
+.cta-block {
+  background: var(--bg2);
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius);
+  padding: 2rem;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem;
+  margin-top: 2rem;
+}
+.cta-block h3 { font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 0.3rem; }
+.cta-block p { font-family: var(--font-mono); font-size: 12px; color: var(--text-low); letter-spacing: 0.01em; }
+.cta-btns { display: flex; gap: 8px; }
+
+/* ── DETAIL PAGE ── */
+.detail-hero {
+  padding: 4rem 2.5rem 3rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--text-low);
+  margin-bottom: 1.4rem; letter-spacing: 0.04em;
+}
+.breadcrumb a { color: var(--text-low); text-decoration: none; }
+.breadcrumb a:hover { color: var(--text-mid); }
+.breadcrumb span { color: var(--blue-dim); }
+.svc-badge {
+  display: inline-block; margin-bottom: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(120,180,255,0.6);
+  border: 0.5px solid rgba(120,180,255,0.2);
+  padding: 3px 10px; border-radius: 9px;
+}
+.detail-hero h1 {
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-weight: 600; line-height: 1.15;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 1rem; letter-spacing: -0.015em;
+}
+.detail-hero h1 em { font-style: normal; color: rgba(140,190,255,0.88); }
+.detail-lead {
+  font-family: var(--font-mono);
+  font-size: 13px; color: var(--text-low);
+  line-height: 1.85; max-width: 540px;
+  margin-bottom: 2.2rem; letter-spacing: 0.01em;
+}
+
+/* ── FEATURES GRID ── */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.feat { background: var(--bg2); padding: 1.5rem 1.4rem; transition: background 0.2s; }
+.feat:hover { background: var(--bg3); }
+.feat-icon {
+  width: 30px; height: 30px;
+  border: 0.5px solid rgba(120,180,255,0.18);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+.feat-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 0.4rem; }
+.feat-desc { font-family: var(--font-mono); font-size: 11px; color: var(--text-low); line-height: 1.7; letter-spacing: 0.01em; }
+
+/* ── TIMELINE ── */
+.timeline {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.tl-item {
+  display: flex; gap: 1.5rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--bg2);
+  border-bottom: 0.5px solid var(--border);
+  align-items: flex-start;
+  transition: background 0.2s;
+}
+.tl-item:last-child { border-bottom: none; }
+.tl-item:hover { background: var(--bg3); }
+.tl-num {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--blue-dim); opacity: 0.5;
+  min-width: 24px; padding-top: 2px;
+  text-transform: uppercase;
+}
+.tl-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75); margin-bottom: 0.3rem; }
+.tl-desc { font-family: var(--font-mono); font-size: 11px; color: var(--text-low); line-height: 1.65; letter-spacing: 0.01em; }
+.tl-tag {
+  display: inline-block; margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(120,180,255,0.45);
+  border: 0.5px solid rgba(120,180,255,0.15);
+  padding: 2px 7px; border-radius: 8px;
+}
+
+/* ── STATS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stat { background: var(--bg2); padding: 1.5rem 1.4rem; }
+.stat-val {
+  font-size: 2rem; font-weight: 600;
+  color: rgba(150,200,255,0.85);
+  line-height: 1; margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--text-low);
+  line-height: 1.5; letter-spacing: 0.01em;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 1.5rem 2.5rem;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 8px;
+  border-top: 0.5px solid var(--border);
+}
+.foot { font-family: var(--font-mono); font-size: 11px; color: var(--text-hint); letter-spacing: 0.04em; }
+
+/* ── DEMO DIALOG ── */
+.demo-dialog {
+  max-width: 640px;
+  display: flex; flex-direction: column; gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+.demo-msg { display: flex; flex-direction: column; gap: 0.35rem; }
+.demo-label {
+  font-family: var(--font-mono);
+  font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.demo-user .demo-label { color: var(--blue-dim); padding-left: 0.2rem; }
+.demo-bot .demo-label { color: rgba(160,220,160,0.55); padding-left: 0.2rem; }
+.demo-bubble {
+  font-family: var(--font-mono);
+  font-size: 12px; line-height: 1.75;
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  letter-spacing: 0.01em;
+}
+.demo-user .demo-bubble {
+  background: var(--blue-faint);
+  border: 0.5px solid var(--blue-border);
+  color: rgba(200,225,255,0.85);
+  align-self: flex-start;
+}
+.demo-bot .demo-bubble {
+  background: rgba(160,220,160,0.06);
+  border: 0.5px solid rgba(160,220,160,0.15);
+  color: rgba(200,240,200,0.8);
+  align-self: flex-start;
+}
+.demo-bot-limit .demo-bubble {
+  background: rgba(255,180,80,0.06);
+  border: 0.5px solid rgba(255,180,80,0.18);
+  color: rgba(255,210,140,0.75);
+}
+
+/* ── LOGO SVG ── */
+.logo { width: 52px; height: 52px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<canvas id="matrix-canvas"></canvas>
+<div class="site">
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="brand" href="edu-assistants.html">
+      <svg class="logo" viewBox="0 0 72 72" fill="none">
+        <polygon points="36,4 62,20 62,52 36,68 10,52 10,20" stroke="rgba(120,180,255,0.35)" stroke-width="1.4" fill="none"/>
+        <polygon points="36,16 52,25 52,47 36,56 20,47 20,25" stroke="rgba(120,180,255,0.65)" stroke-width="1.4" fill="none"/>
+        <polygon points="36,26 44,31 44,41 36,46 28,41 28,31" stroke="rgba(140,195,255,1)" stroke-width="1.4" fill="rgba(140,195,255,0.06)"/>
+        <circle cx="36" cy="36" r="3.8" fill="rgba(170,220,255,1)"/>
+      </svg>
+      <span class="brand-name">Edu Assistants</span>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="nav-link" href="edu-assistants.html">Αρχική</a>
+      <a href="#" class="nav-btn" onclick="alert('Σύνδεση — σύντομα διαθέσιμο'); return false;">Σύνδεση καθηγητή →</a>
+    </div>
+  </nav>
+
+  <div id="page-proctor" class="page active">
+    <div class="detail-hero">
+      <div class="breadcrumb"><a href="edu-assistants.html">Αρχική</a> → <span>Δημιουργός Επιτηρήσεων</span></div>
+      <div class="svc-badge">Υπηρεσία 03 · Διαθέσιμο</div>
+      <h1>Αυτό που κάνετε<br>σε ώρες — <em>σε λεπτά</em></h1>
+      <p class="detail-lead">Κάθε εξεταστική, η ίδια επίπονη διαδικασία: αντιστοίχιση επιτηρητών, εξαιρέσεις, δίκαιη κατανομή. Ο Δημιουργός Επιτηρήσεων αναλαμβάνει τα πάντα — εσείς ελέγχετε το αποτέλεσμα.</p>
+      <div class="cta-row">
+        <a href="#" class="btn-p" onclick="alert('Επικοινωνία — σύντομα'); return false;">Ζητήστε πρόσβαση →</a>
+        <a href="#" class="btn-g" onclick="alert('Επικοινωνία — σύντομα'); return false;">Επικοινωνία</a>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="sec">
+      <div class="sec-label">Δυνατότητες</div>
+      <div class="sec-title">Τι κάνει ο Δημιουργός Επιτηρήσεων</div>
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M2 7h7M2 10h5" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linecap="round"/></svg></div>
+          <div class="feat-title">Οδηγός βήμα-βήμα</div>
+          <div class="feat-desc">Ενσωματωμένος οδηγός σε κάθε βήμα της διαδικασίας — από την εισαγωγή δεδομένων μέχρι την εξαγωγή του τελικού προγράμματος.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><line x1="4" y1="5" x2="10" y2="5" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><line x1="4" y1="7.5" x2="10" y2="7.5" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><line x1="4" y1="10" x2="7" y2="10" stroke="rgba(120,180,255,0.6)" stroke-width="1"/></svg></div>
+          <div class="feat-title">Εισαγωγή σε πολλές μορφές</div>
+          <div class="feat-desc">Δέχεται το υπάρχον πρόγραμμα εξετάσεων σε Word, PDF ή CSV — και τα ονόματα των επιτηρητών σε φυσική γλώσσα.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><path d="M7 4v3l2 2" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linecap="round"/></svg></div>
+          <div class="feat-title">Εξαιρέσεις σε φυσική γλώσσα</div>
+          <div class="feat-desc">Γράφετε απλά "ο κ. Παπαδόπουλος δεν μπορεί Δευτέρες" ή "η κα. Νικολάου είναι διαθέσιμη μόνο πρωί" — το σύστημα τις κατανοεί και τις εφαρμόζει.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L9 5H13L10 8L11 12L7 10L3 12L4 8L1 5H5L7 1Z" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linejoin="round"/></svg></div>
+          <div class="feat-title">Δίκαιη κατανομή</div>
+          <div class="feat-desc">Αυτόματη εξισορρόπηση επιτηρήσεων — δεν ξεπερνά τις 2 επιτηρήσεις η διαφορά μεταξύ κατώτερου και ανώτερου. Δίκαιο για όλους.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><path d="M5 3V2a2 2 0 014 0v1" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><line x1="4" y1="7" x2="10" y2="7" stroke="rgba(120,180,255,0.6)" stroke-width="1"/></svg></div>
+          <div class="feat-title">Πλήρη στατιστικά</div>
+          <div class="feat-desc">Εικόνα ανά επιτηρητή και ανά ημέρα — πόσες επιτηρήσεις, πότε, πού. Πλήρης εποπτεία της εξεταστικής σε μια ματιά.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><path d="M5 6l1.5 1.5L9 4" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linecap="round"/></svg></div>
+          <div class="feat-title">Εξαγωγή έτοιμου εγγράφου</div>
+          <div class="feat-desc">Το τελικό πρόγραμμα εξάγεται σε Word — έτοιμο για εκτύπωση και διανομή στους επιτηρητές.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M9 4l3 3-3 3" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="feat-title">Διορθώσεις σε υπάρχον πρόγραμμα</div>
+          <div class="feat-desc">Ανεβάζετε ήδη υπάρχον πρόγραμμα και κάνετε αλλαγές πάνω σε αυτό — χωρίς να ξεκινήσετε από την αρχή.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="4" cy="7" r="2" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><circle cx="10" cy="7" r="2" stroke="rgba(120,180,255,0.6)" stroke-width="1"/><path d="M6 7h2" stroke="rgba(120,180,255,0.6)" stroke-width="1" stroke-linecap="round"/></svg></div>
+          <div class="feat-title">Περιορισμένος αριθμός χειριστών</div>
+          <div class="feat-desc">Πρόσβαση μόνο σε εξουσιοδοτημένο προσωπικό του τμήματος — ασφαλής και ελεγχόμενη χρήση.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="sec">
+      <div class="sec-label">Κατάλληλο για</div>
+      <div class="sec-title">Ποιους αφορά</div>
+      <div class="how-block">
+        <div class="steps">
+          <div class="step">
+            <div class="step-n">01</div>
+            <div class="step-t">ΕΤΕΠ & ΕΔΙΠ</div>
+            <div class="step-d">Για το προσωπικό που αναλαμβάνει τη δημιουργία του προγράμματος επιτηρήσεων κάθε εξεταστική.</div>
+          </div>
+          <div class="step">
+            <div class="step-n">02</div>
+            <div class="step-t">Γραμματείες Τμημάτων</div>
+            <div class="step-d">Για γραμματείες που διαχειρίζονται την οργάνωση της εξεταστικής περιόδου.</div>
+          </div>
+          <div class="step">
+            <div class="step-n">03</div>
+            <div class="step-t">Οποιοδήποτε ΑΕΙ</div>
+            <div class="step-d">Προσαρμόζεται στις ανάγκες κάθε τμήματος — ανεξάρτητα από μέγεθος και επιστημονικό αντικείμενο.</div>
+          </div>
+          <div class="step">
+            <div class="step-n">04</div>
+            <div class="step-t">Χρησιμοποιείται ήδη στο ΑΠΘ</div>
+            <div class="step-d">Δοκιμασμένο σε πραγματικές συνθήκες εξεταστικής — όχι πιλοτικό, λειτουργικό.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="sec">
+      <div class="cta-block">
+        <div>
+          <h3>Έτοιμοι να το δοκιμάσετε;</h3>
+          <p>Επικοινωνήστε μαζί μας — η επόμενη εξεταστική μπορεί να είναι η πρώτη χωρίς άγχος.</p>
+        </div>
+        <div class="cta-btns">
+          <a href="#" class="btn-p" onclick="alert('Επικοινωνία — σύντομα'); return false;">Επικοινωνία →</a>
+          <a href="edu-assistants.html" class="btn-g">← Αρχική</a>
+        </div>
+      </div>
+    </div>
+    <div class="rule"></div>
+    <footer><span class="foot">Edu Assistants · 2026</span><span class="foot">Powered by Claude AI</span></footer>
+  </div>
+
+</div>
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  history.pushState(null, '', id === 'home' ? '#' : '#' + id);
+}
+
+function loadFromHash() {
+  const hash = window.location.hash.replace('#', '') || 'home';
+  const el = document.getElementById('page-' + hash);
+  if (el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+  } else {
+    showPage('home');
+  }
+}
+
+window.addEventListener('popstate', loadFromHash);
+window.addEventListener('DOMContentLoaded', loadFromHash);
+
+// Matrix background
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+const chars = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ∑∫∂∇λπφ01';
+let cols = Math.floor(canvas.width / 22);
+let drops = Array.from({length: cols}, () => Math.random() * -60);
+function draw() {
+  cols = Math.floor(canvas.width / 22);
+  if (drops.length !== cols) drops = Array.from({length: cols}, () => Math.random() * -60);
+  ctx.fillStyle = 'rgba(8,8,16,0.055)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '12px monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const alpha = Math.max(0, 0.8 - (drops[i] / 55) * 0.65);
+    ctx.fillStyle = `rgba(180,215,255,${alpha})`;
+    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 22, drops[i] * 22);
+    if (drops[i] * 22 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i] += 0.3;
+  }
+}
+setInterval(draw, 55);
+</script>
+</body>
+</html>
